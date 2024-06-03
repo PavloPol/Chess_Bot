@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgm84v64cx25o"]
+
+[ext_resource type="Script" path="res://Piece.cs" id="1_xvw3c"]
+[ext_resource type="Texture2D" uid="uid://dgc5lbgskwefu" path="res://Sprites/Pieces.png" id="2_kkphx"]
+
+[node name="Piece" type="Node2D"]
+script = ExtResource("1_xvw3c")
+
+[node name="Icon" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_kkphx")
+hframes = 6
+vframes = 2
+
+[node name="Button" type="Button" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+
+[connection signal="pressed" from="Button" to="." method="OnButtonPressed"]

@@ -1,0 +1,355 @@
+[gd_scene load_steps=7 format=3 uid="uid://dmv4opoi1t6hu"]
+
+[ext_resource type="Script" path="res://GUI.cs" id="1_77c5a"]
+[ext_resource type="PackedScene" uid="uid://dum805x78s8dt" path="res://slot.tscn" id="2_r88n1"]
+[ext_resource type="Script" path="res://Bitboard.cs" id="3_8fdpr"]
+[ext_resource type="Script" path="res://DataHandlerCS.cs" id="4_3gcen"]
+[ext_resource type="Script" path="res://GeneratePath.cs" id="5_gtam7"]
+[ext_resource type="Script" path="res://ChessBot.cs" id="6_dhvux"]
+
+[node name="GUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_77c5a")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14902, 0.14902, 0.14902, 1)
+
+[node name="ChessBoard" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -648.0
+offset_top = -324.0
+offset_bottom = 324.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0.227451, 0.227451, 0.227451, 1)
+
+[node name="BoardGrid" type="GridContainer" parent="ChessBoard"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -312.0
+offset_top = -312.0
+offset_right = 312.0
+offset_bottom = 312.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 8
+
+[node name="Slot" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 0
+
+[node name="Slot2" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 1
+
+[node name="Slot3" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 2
+
+[node name="Slot4" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 3
+
+[node name="Slot5" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 4
+
+[node name="Slot6" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 5
+
+[node name="Slot7" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 6
+
+[node name="Slot8" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 7
+
+[node name="Slot9" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 8
+
+[node name="Slot10" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 9
+
+[node name="Slot11" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 10
+
+[node name="Slot12" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 11
+
+[node name="Slot13" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 12
+
+[node name="Slot14" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 13
+
+[node name="Slot15" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 14
+
+[node name="Slot16" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 15
+
+[node name="Slot17" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 16
+
+[node name="Slot18" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 17
+
+[node name="Slot19" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 18
+
+[node name="Slot20" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 19
+
+[node name="Slot21" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 20
+
+[node name="Slot22" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 21
+
+[node name="Slot23" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 22
+
+[node name="Slot24" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 23
+
+[node name="Slot25" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 24
+
+[node name="Slot26" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 25
+
+[node name="Slot27" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 26
+
+[node name="Slot28" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 27
+
+[node name="Slot29" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 28
+
+[node name="Slot30" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 29
+
+[node name="Slot31" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 30
+
+[node name="Slot32" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 31
+
+[node name="Slot33" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 32
+
+[node name="Slot34" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 33
+
+[node name="Slot35" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 34
+
+[node name="Slot36" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 35
+
+[node name="Slot37" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 36
+
+[node name="Slot38" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 37
+
+[node name="Slot39" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 38
+
+[node name="Slot40" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 39
+
+[node name="Slot41" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 40
+
+[node name="Slot42" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 41
+
+[node name="Slot43" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 42
+
+[node name="Slot44" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 43
+
+[node name="Slot45" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 44
+
+[node name="Slot46" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 45
+
+[node name="Slot47" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 46
+
+[node name="Slot48" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 47
+
+[node name="Slot49" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 48
+
+[node name="Slot50" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 49
+
+[node name="Slot51" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 50
+
+[node name="Slot52" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 51
+
+[node name="Slot53" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 52
+
+[node name="Slot54" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 53
+
+[node name="Slot55" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 54
+
+[node name="Slot56" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 55
+
+[node name="Slot57" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 56
+
+[node name="Slot58" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 57
+
+[node name="Slot59" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 58
+
+[node name="Slot60" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 59
+
+[node name="Slot61" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 60
+
+[node name="Slot62" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 61
+
+[node name="Slot63" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 62
+
+[node name="Slot64" parent="ChessBoard/BoardGrid" instance=ExtResource("2_r88n1")]
+layout_mode = 2
+SlotID = 63
+
+[node name="Bitboard" type="Node" parent="."]
+script = ExtResource("3_8fdpr")
+
+[node name="DataHandlerCS" type="Node" parent="."]
+script = ExtResource("4_3gcen")
+
+[node name="GeneratePath" type="Node" parent="."]
+script = ExtResource("5_gtam7")
+
+[node name="ChessBot" type="Node" parent="."]
+script = ExtResource("6_dhvux")
+maxDepth = 4
+
+[node name="Message" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -129.5
+offset_top = -34.5
+offset_right = 129.5
+offset_bottom = 34.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.635294, 0.513726, 1)
+theme_override_font_sizes/font_size = 50
+text = "gsdgnjksdngs"
+
+[node name="StartGameButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 248.0
+offset_right = 281.0
+offset_bottom = 324.0
+theme_override_font_sizes/font_size = 20
+text = "Start Game"
+
+[connection signal="pressed" from="StartGameButton" to="." method="OnStartGameButtonPressed"]
