@@ -1,10 +1,5 @@
 using Godot;
-using Godot.NativeInterop;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Http;
-using System.Reflection.Metadata.Ecma335;
+using Godot.Collections;
 
 public partial class GUI : Control
 {
@@ -17,9 +12,10 @@ public partial class GUI : Control
 	ChessBot ChessBot;
 	Label Message;
 	bool GameStart = false;
+	bool PlayersTurn = true;
 
-	List<slot> GridArray = new List<slot>();
-	List<Node> PieceArray = new List<Node>(new Node[64]);
+	Array<slot> GridArray = new Array<slot>();
+	Array<Piece> PieceArray = new Array<Piece>(new Piece[64]);
 	Vector2 IconOffset = new Vector2(39, 39);
 
 	const string StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -81,7 +77,7 @@ public partial class GUI : Control
 
 	public void OnSlotClicked(slot slot)
 	{
-		if(GameStart)
+		if(GameStart && PlayersTurn)
 		{
 			if(SelectedPiece == null)
 			{
@@ -98,29 +94,16 @@ public partial class GUI : Control
 			SelectedPiece = null;
 
 			var move = ChessBot.FindNextMove();
-			UpdateBoard(63 - move[0], 63 - move[1]);
-		}
-	}
+			MovePiece(PieceArray[63 - move[0]], 63 - move[1]);
 
-	public void UpdateBoard(int FromLoc, int ToLoc)
-	{
-		if (PieceArray[ToLoc] != null)
-		{
-			PieceArray[ToLoc].QueueFree();
-			PieceArray[ToLoc] = null;
 		}
-		Tween tween = GetTree().CreateTween();
-		tween.TweenProperty(PieceArray[FromLoc], "global_position", GridArray[ToLoc].GlobalPosition + IconOffset, 0.5);
-		PieceArray[ToLoc] = PieceArray[FromLoc];
-		PieceArray[FromLoc] = null;
-		((Piece)PieceArray[ToLoc]).SlotID = ToLoc;
 	}
 
 	public void MovePiece(Piece piece, int location)
 	{
 		if (PieceArray[location] != null)
 		{
-			RemoveFromBitBoard((Piece)PieceArray[location]);
+			RemoveFromBitBoard(PieceArray[location]);
 			PieceArray[location].QueueFree();
 			PieceArray[location] = null;
 		}
@@ -128,7 +111,7 @@ public partial class GUI : Control
 		RemoveFromBitBoard(piece);
 		Tween tween = GetTree().CreateTween();
 		tween.TweenProperty(piece, "global_position", GridArray[location].GlobalPosition + IconOffset, 0.5);
-		PieceArray[piece.SlotID] = null;
+        PieceArray[piece.SlotID] = null;
 		PieceArray[location] = piece;
 		piece.SlotID = location;
 		Bitboard.AddPiece(63 - location, piece.Type);
@@ -164,7 +147,7 @@ public partial class GUI : Control
 
 	public void AddPiece(PackedScene pieceScene, int pieceType, int location)
 	{
-		Node newPiece = pieceScene.Instantiate();
+		Piece newPiece = (Piece)pieceScene.Instantiate();
 		ChessBoard.AddChild(newPiece);
 		newPiece.Call("SetType", pieceType);
 		newPiece.Call("SetSlotID", location);

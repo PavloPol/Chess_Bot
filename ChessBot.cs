@@ -9,8 +9,8 @@ public partial class ChessBot : Node
 	[Export]
 	public int maxDepth = 3;
 	public Bitboard currentBoard;
-	public DataHandlerCS.Move currentMove = new(-1, -1);
-	public DataHandlerCS DH = new();
+	public DataHandler.Move currentMove = new(-1, -1);
+	public DataHandler DH = new();
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -34,9 +34,9 @@ public partial class ChessBot : Node
 		{
 			return Evaluate(isBlackMove, searchBoard);
 		}
-		List<DataHandlerCS.Move> moves = searchBoard.GenerateMoveSet(isBlackMove);
+		List<DataHandler.Move> moves = searchBoard.GenerateMoveSet(isBlackMove);
 
-		foreach(DataHandlerCS.Move move in moves)
+		foreach(DataHandler.Move move in moves)
 		{
 			Bitboard newBoard = new();
 			newBoard.SetBoard(searchBoard.whitePieces, searchBoard.blackPieces);
@@ -61,9 +61,6 @@ public partial class ChessBot : Node
 		searchCounter = 0;
 		SearchMoves(true, maxDepth, currentBoard);
 		int[] nextMove = { currentMove.From, currentMove.To };
-		currentBoard.MakeMove(currentMove, true);
-		
-
 		return nextMove;
 	}
 

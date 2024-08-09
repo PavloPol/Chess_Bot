@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dmv4opoi1t6hu"]
+[gd_scene load_steps=6 format=3 uid="uid://dmv4opoi1t6hu"]
 
 [ext_resource type="Script" path="res://GUI.cs" id="1_77c5a"]
 [ext_resource type="PackedScene" uid="uid://dum805x78s8dt" path="res://slot.tscn" id="2_r88n1"]
 [ext_resource type="Script" path="res://Bitboard.cs" id="3_8fdpr"]
-[ext_resource type="Script" path="res://DataHandlerCS.cs" id="4_3gcen"]
 [ext_resource type="Script" path="res://GeneratePath.cs" id="5_gtam7"]
 [ext_resource type="Script" path="res://ChessBot.cs" id="6_dhvux"]
 
@@ -314,9 +313,6 @@ SlotID = 63
 
 [node name="Bitboard" type="Node" parent="."]
 script = ExtResource("3_8fdpr")
-
-[node name="DataHandlerCS" type="Node" parent="."]
-script = ExtResource("4_3gcen")
 
 [node name="GeneratePath" type="Node" parent="."]
 script = ExtResource("5_gtam7")

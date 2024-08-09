@@ -63,11 +63,11 @@ public partial class Bitboard : Node
 			LeftShift(1);
 			if(Char.IsUpper(i)) 
 			{
-				whitePieces[DataHandlerCS.FenDict[Char.ToLower(i)]] |= 1UL;
+				whitePieces[DataHandler.FenDict[Char.ToLower(i)]] |= 1UL;
 			}
 			else
 			{
-				blackPieces[DataHandlerCS.FenDict[Char.ToLower(i)]] |= 1UL;
+				blackPieces[DataHandler.FenDict[Char.ToLower(i)]] |= 1UL;
             }
         }
     }
@@ -108,7 +108,7 @@ public partial class Bitboard : Node
         }
     }
 
-	public void MakeMove(DataHandlerCS.Move move, bool isBlackMove)
+	public void MakeMove(DataHandler.Move move, bool isBlackMove)
 	{
 		ulong[] fromList = isBlackMove ? blackPieces : whitePieces;
         ulong[] toList = isBlackMove ? whitePieces : blackPieces;
@@ -131,11 +131,11 @@ public partial class Bitboard : Node
 
     }
 
-	public List<DataHandlerCS.Move> GenerateMoveSet(bool isBlackMove)
+	public List<DataHandler.Move> GenerateMoveSet(bool isBlackMove)
 	{
 		ulong[] searchList;
 		ulong selfBoard, enemyBoard;
-		List<DataHandlerCS.Move> moveSet = new();
+		List<DataHandler.Move> moveSet = new();
 		GeneratePath pathGenerator = new();
 		if (isBlackMove)
 		{
@@ -160,7 +160,7 @@ public partial class Bitboard : Node
 				{
 					if((currentMoves & (1UL << j)) != 0)
 					{
-						DataHandlerCS.Move newMove = new(i, j);
+						DataHandler.Move newMove = new(i, j);
 						moveSet.Add(newMove);
 					}
 				}
@@ -177,7 +177,7 @@ public partial class Bitboard : Node
                 {
                     if ((currentMoves & (1UL << j)) != 0)
                     {
-                        DataHandlerCS.Move newMove = new(i, j);
+                        DataHandler.Move newMove = new(i, j);
                         moveSet.Add(newMove);
                     }
                 }
@@ -194,7 +194,7 @@ public partial class Bitboard : Node
                 {
                     if ((currentMoves & (1UL << j)) != 0)
                     {
-                        DataHandlerCS.Move newMove = new(i, j);
+                        DataHandler.Move newMove = new(i, j);
                         moveSet.Add(newMove);
                     }
                 }
@@ -211,7 +211,7 @@ public partial class Bitboard : Node
                 {
                     if ((currentMoves & (1UL << j)) != 0)
                     {
-                        DataHandlerCS.Move newMove = new(i, j);
+                        DataHandler.Move newMove = new(i, j);
                         moveSet.Add(newMove);
                     }
                 }
@@ -228,7 +228,7 @@ public partial class Bitboard : Node
                 {
                     if ((currentMoves & (1UL << j)) != 0)
                     {
-                        DataHandlerCS.Move newMove = new(i, j);
+                        DataHandler.Move newMove = new(i, j);
                         moveSet.Add(newMove);
                     }
                 }
@@ -245,7 +245,7 @@ public partial class Bitboard : Node
                 {
                     if ((currentMoves & (1UL << j)) != 0)
                     {
-                        DataHandlerCS.Move newMove = new(i, j);
+                        DataHandler.Move newMove = new(i, j);
                         moveSet.Add(newMove);
                     }
                 }
