@@ -109,8 +109,7 @@ public partial class GUI : Control
 		}
 
 		RemoveFromBitBoard(piece);
-		Tween tween = GetTree().CreateTween();
-		tween.TweenProperty(piece, "global_position", GridArray[location].GlobalPosition + IconOffset, 0.5);
+		piece.GlobalPosition =  GridArray[location].GlobalPosition + IconOffset;
         PieceArray[piece.SlotID] = null;
 		PieceArray[location] = piece;
 		piece.SlotID = location;
