@@ -339,13 +339,23 @@ theme_override_colors/font_color = Color(0, 0.635294, 0.513726, 1)
 theme_override_font_sizes/font_size = 50
 text = "gsdgnjksdngs"
 
-[node name="StartGameButton" type="Button" parent="."]
+[node name="PlayWhite" type="Button" parent="."]
 layout_mode = 0
-offset_left = 136.0
-offset_top = 248.0
-offset_right = 281.0
-offset_bottom = 324.0
+offset_left = 170.0
+offset_top = 320.0
+offset_right = 315.0
+offset_bottom = 396.0
 theme_override_font_sizes/font_size = 20
-text = "Start Game"
+text = "Play White"
 
-[connection signal="pressed" from="StartGameButton" to="." method="OnStartGameButtonPressed"]
+[node name="PlayBlack" type="Button" parent="."]
+layout_mode = 1
+offset_left = 170.0
+offset_top = 200.0
+offset_right = 315.0
+offset_bottom = 276.0
+theme_override_font_sizes/font_size = 20
+text = "Play Black"
+
+[connection signal="pressed" from="PlayWhite" to="." method="OnPlayWhiteButtonPressed"]
+[connection signal="pressed" from="PlayBlack" to="." method="OnPlayBlackButtonPressed"]

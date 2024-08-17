@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Concurrent;
 
 public partial class GeneratePath : Node
 {
@@ -11,6 +12,11 @@ public partial class GeneratePath : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+
+	public bool IsKingUnderAttack(bool isBlack) ////////
+	{
+		return false;
 	}
 
 	public ulong RookPath(int rookPosition, ulong selfBoard, ulong enemyBoard, bool isBlack)

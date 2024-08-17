@@ -11,6 +11,7 @@ public partial class ChessBot : Node
 	public Bitboard currentBoard;
 	public DataHandler.Move currentMove = new(-1, -1);
 	public DataHandler DH = new();
+	public bool isBlack = true;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -22,9 +23,10 @@ public partial class ChessBot : Node
 	{
 	}
 
-	public void initBot(Bitboard board)
+	public void initBot(Bitboard board, bool isBlack)
 	{
 		currentBoard = board;
+		this.isBlack = isBlack;
 	}
 
 	public int SearchMoves(bool isBlackMove, int depth, Bitboard searchBoard, int alpha = int.MinValue+2, int beta = int.MaxValue)
@@ -59,7 +61,7 @@ public partial class ChessBot : Node
 	public int[] FindNextMove()
 	{
 		searchCounter = 0;
-		SearchMoves(true, maxDepth, currentBoard);
+		SearchMoves(isBlack, maxDepth, currentBoard);
 		int[] nextMove = { currentMove.From, currentMove.To };
 		return nextMove;
 	}

@@ -13,6 +13,7 @@ public partial class GUI : Control
 	Label Message;
 	bool GameStart = false;
 	bool PlayersTurn = true;
+	bool isPlayerBlack = false;
 
 	Array<slot> GridArray = new Array<slot>();
 	Vector2 IconOffset = new Vector2(39, 39);
@@ -88,15 +89,21 @@ public partial class GUI : Control
 				ClearBoardFilter();
 				return;
 			}
-			MovePiece(SelectedPiece, slot.SlotID);
+            PlayersTurn = !PlayersTurn;
+            MovePiece(SelectedPiece, slot.SlotID);
 			ClearBoardFilter();
 			SelectedPiece = null;
 
-			var move = ChessBot.FindNextMove();
-			MovePiece(DataHandler.PieceArray[63 - move[0]], 63 - move[1]);
-
+			BotsTurn();
 		}
 	}
+
+	public void BotsTurn()
+	{
+        var move = ChessBot.FindNextMove();
+        PlayersTurn = !PlayersTurn;
+        MovePiece(DataHandler.PieceArray[63 - move[0]], 63 - move[1]);
+    }
 
 	public void MovePiece(Piece piece, int location)
 	{
@@ -136,6 +143,7 @@ public partial class GUI : Control
 		DataHandler.PieceArray[location] = piece;
 		piece.SlotID = location;
         piece.IsMoved = true;
+
         if (piece.Type == 3 && location < 8) // white pawn
         {
             piece.SetType(4); // promote to queen
@@ -144,6 +152,7 @@ public partial class GUI : Control
         {
             piece.SetType(10);
         }
+
         Bitboard.AddPiece(63 - location, piece.Type);
 	}
 
@@ -188,13 +197,13 @@ public partial class GUI : Control
 
 	public void OnPieceSelected(Piece piece)
 	{
-		if (GameStart)
+		if (GameStart && PlayersTurn)
 		{
 			if (SelectedPiece != null)
 			{
 				OnSlotClicked(GridArray[piece.SlotID]);
 			}
-			else
+			else if ((piece.Type < 6 && isPlayerBlack == false) || (piece.Type > 5 && isPlayerBlack == true))
 			{
 				SelectedPiece = piece;
 				ulong selfBitBoard = Bitboard.GetBlackBitBoard();
@@ -275,19 +284,36 @@ public partial class GUI : Control
 
     }
 
-	public void OnStartGameButtonPressed()
+	public void OnPlayWhiteButtonPressed()
 	{
+		isPlayerBlack = false;
+		PlayersTurn = true;
 		Message.Visible = false;
 		ClearBoardFilter();
 		ClearPieceArray();
 		SelectedPiece = null;
 		ParseFen(StartFen);
 		Bitboard.InitBitBoard(StartFen);
-		ChessBot.initBot(Bitboard);
+		ChessBot.initBot(Bitboard, true);
 		GameStart = true;
 	}
 
-	public void ClearPieceArray()
+    public void OnPlayBlackButtonPressed()
+    {
+		isPlayerBlack = true;
+		PlayersTurn = false;
+        Message.Visible = false;
+        ClearBoardFilter();
+        ClearPieceArray();
+        SelectedPiece = null;
+        ParseFen(StartFen);
+        Bitboard.InitBitBoard(StartFen);
+        ChessBot.initBot(Bitboard, false);
+        GameStart = true;
+		BotsTurn();
+    }
+
+    public void ClearPieceArray()
 	{
 		for(int i = 0; i < 64; i++)
 		{
