@@ -9,7 +9,7 @@ public partial class Piece : Node2D
 	public Sprite2D Icon;
 	public int SlotID = -1;
 	public int Type;
-
+	public bool IsMoved = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

@@ -15,10 +15,9 @@ public partial class GUI : Control
 	bool PlayersTurn = true;
 
 	Array<slot> GridArray = new Array<slot>();
-	Array<Piece> PieceArray = new Array<Piece>(new Piece[64]);
 	Vector2 IconOffset = new Vector2(39, 39);
 
-	const string StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	const string StartFen = "8/P7/3k4/8/8/3K4/7p/8 w KQkq - 0 1";
     // "8/8/k4r1R/8/8/8/8/8";
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -94,26 +93,58 @@ public partial class GUI : Control
 			SelectedPiece = null;
 
 			var move = ChessBot.FindNextMove();
-			MovePiece(PieceArray[63 - move[0]], 63 - move[1]);
+			MovePiece(DataHandler.PieceArray[63 - move[0]], 63 - move[1]);
 
 		}
 	}
 
 	public void MovePiece(Piece piece, int location)
 	{
-		if (PieceArray[location] != null)
+		if (piece.Type == 1)
 		{
-			RemoveFromBitBoard(PieceArray[location]);
-			PieceArray[location].QueueFree();
-			PieceArray[location] = null;
+			if (piece.SlotID - location == 2) // quenn side castle white
+			{
+				MovePiece(DataHandler.PieceArray[56], location + 1);
+			}
+			else if (piece.SlotID - location == -2) // king side castle white
+			{
+				MovePiece(DataHandler.PieceArray[63], location - 1);
+			}
 		}
+        if (piece.Type == 7)
+        {
+            if (piece.SlotID - location == 2) // quenn side castle black
+            {
+                MovePiece(DataHandler.PieceArray[0], location + 1);
+            }
+            else if (piece.SlotID - location == -2) // king side castle black
+            {
+                MovePiece(DataHandler.PieceArray[7], location - 1);
+            }
+        }
 
+        if (DataHandler.PieceArray[location] != null)
+		{
+			RemoveFromBitBoard(DataHandler.PieceArray[location]);
+			DataHandler.PieceArray[location].QueueFree();
+			DataHandler.PieceArray[location] = null;
+		}
+		
 		RemoveFromBitBoard(piece);
 		piece.GlobalPosition =  GridArray[location].GlobalPosition + IconOffset;
-        PieceArray[piece.SlotID] = null;
-		PieceArray[location] = piece;
+        DataHandler.PieceArray[piece.SlotID] = null;
+		DataHandler.PieceArray[location] = piece;
 		piece.SlotID = location;
-		Bitboard.AddPiece(63 - location, piece.Type);
+        piece.IsMoved = true;
+        if (piece.Type == 3 && location < 8) // white pawn
+        {
+            piece.SetType(4); // promote to queen
+        }
+        if (piece.Type == 9 && location > 55)
+        {
+            piece.SetType(10);
+        }
+        Bitboard.AddPiece(63 - location, piece.Type);
 	}
 
 	public void RemoveFromBitBoard(Piece piece)
@@ -151,7 +182,7 @@ public partial class GUI : Control
 		newPiece.Call("SetType", pieceType);
 		newPiece.Call("SetSlotID", location);
 		newPiece.Call("SetGlobalPosition", GridArray[location].GlobalPosition + IconOffset);
-		PieceArray[location] = newPiece;
+		DataHandler.PieceArray[location] = newPiece;
 		newPiece.Connect("PieceSelected", new Callable(this, "OnPieceSelected"));
 	}
 
@@ -260,10 +291,10 @@ public partial class GUI : Control
 	{
 		for(int i = 0; i < 64; i++)
 		{
-			if(PieceArray[i] != null)
+			if(DataHandler.PieceArray[i] != null)
 			{
-                PieceArray[i].QueueFree();
-                PieceArray[i] = null;
+                DataHandler.PieceArray[i].QueueFree();
+                DataHandler.PieceArray[i] = null;
 
             }
 		}

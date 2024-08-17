@@ -5,7 +5,7 @@ using System.Data.Common;
 
 public partial class Bitboard : Node
 {
-	public ulong[] whitePieces = { 0, 0, 0, 0, 0, 0 };
+	public ulong[] whitePieces = { 0, 0, 0, 0, 0, 0 }; // bishop king knight pawn queen rook
 	public ulong[] blackPieces = { 0, 0, 0, 0, 0, 0 };
 
     // Called when the node enters the scene tree for the first time.
@@ -122,16 +122,71 @@ public partial class Bitboard : Node
 		}
 		for(int i = 0; i < 6; i++)
 		{
+			if (move.castle)
+			{
+                HandleCastle(move, isBlackMove);
+            }
 			if ((fromList[i] & fromBit) != 0)
 			{
 				fromList[i] &= ~(fromBit);
-				fromList[i] |= toBit;
-			}
+                if (move.promote && IsPawn(i)) // Check for promotion
+                {
+                    PromoteToQueen(fromList, toBit);
+                }
+                else
+                {
+                    fromList[i] |= toBit;
+                }
+            }
 		}
-
     }
 
-	public List<DataHandler.Move> GenerateMoveSet(bool isBlackMove)
+    private bool IsPawn(int pieceIndex)
+    {
+        // Assuming pieceIndex 0 represents pawns
+        return pieceIndex == 3;
+    }
+
+    private void PromoteToQueen(ulong[] fromList, ulong toBit)
+    {
+        fromList[4] |= toBit; // Set the bit for the queen at the destination
+    }
+
+    private void HandleCastle(DataHandler.Move move, bool isBlackMove)
+    {
+        ulong[] fromList = isBlackMove ? blackPieces : whitePieces;
+
+        // Determine the rook's from and to squares based on the king's move
+        if (move.To == 2) // Queenside castle
+        {
+            // Move the rook from its initial square (0) to its new square (3)
+            ulong rookFromBit = 1UL << (move.From - 4);
+            ulong rookToBit = 1UL << (move.From - 1);
+            MoveRookForCastle(fromList, rookFromBit, rookToBit);
+        }
+        else if (move.To == 6) // Kingside castle
+        {
+            // Move the rook from its initial square (7) to its new square (5)
+            ulong rookFromBit = 1UL << (move.From + 3);
+            ulong rookToBit = 1UL << (move.From + 1);
+            MoveRookForCastle(fromList, rookFromBit, rookToBit);
+        }
+    }
+
+    private void MoveRookForCastle(ulong[] fromList, ulong rookFromBit, ulong rookToBit)
+    {
+        // Loop through the rooks in the fromList to find and move the rook
+        for (int i = 0; i < 6; i++)
+        {
+            if ((fromList[i] & rookFromBit) != 0)
+            {
+                fromList[i] &= ~(rookFromBit);
+                fromList[i] |= rookToBit;
+            }
+        }
+    }
+
+    public List<DataHandler.Move> GenerateMoveSet(bool isBlackMove)
 	{
 		ulong[] searchList;
 		ulong selfBoard, enemyBoard;
@@ -178,6 +233,10 @@ public partial class Bitboard : Node
                     if ((currentMoves & (1UL << j)) != 0)
                     {
                         DataHandler.Move newMove = new(i, j);
+                        if (Math.Abs(i - j) > 1)
+                        {
+							newMove.castle = true;
+                        }
                         moveSet.Add(newMove);
                     }
                 }
@@ -212,6 +271,14 @@ public partial class Bitboard : Node
                     if ((currentMoves & (1UL << j)) != 0)
                     {
                         DataHandler.Move newMove = new(i, j);
+                        if (isBlackMove && j < 8)
+                        {
+                            newMove.promote = true;
+                        }
+                        if (!isBlackMove && j > 55)
+                        {
+                            newMove.promote = true;
+                        }
                         moveSet.Add(newMove);
                     }
                 }

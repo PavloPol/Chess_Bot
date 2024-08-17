@@ -3,7 +3,7 @@ using Godot.Collections;
 
 public partial class DataHandler : Node
 {
-	private enum PieceNames
+	public enum PieceNames
 	{
 		WHITE_BISHOP,
 		WHITE_KING,
@@ -23,6 +23,8 @@ public partial class DataHandler : Node
     private static DataHandler _instance;
     public static DataHandler Instance => _instance;
 
+    public static Array<Piece> PieceArray = new Array<Piece>(new Piece[64]);
+
     public static Dictionary<char, int> FenDict = new Dictionary<char, int>()
     {
         {'b', 0},
@@ -41,6 +43,8 @@ public partial class DataHandler : Node
     {
         public int From { get; set; }
         public int To { get; set; }
+		public bool castle = false;
+		public bool promote = false;
         public Move(int a, int b)
         {
             From = a;

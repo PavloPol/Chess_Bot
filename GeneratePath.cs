@@ -194,6 +194,50 @@ public partial class GeneratePath : Node
 		{
 			kingMask &= ~0xC0C0C0C0C0C0C0C0UL;
 		}
+		if (!DataHandler.PieceArray[63 - kingPosition].IsMoved)
+		{
+			if (isBlack)
+			{
+				if (DataHandler.PieceArray[5] == null 
+                    && DataHandler.PieceArray[6] == null 
+                    && DataHandler.PieceArray[7] != null 
+					&& DataHandler.PieceArray[7].Type == (int)DataHandler.PieceNames.BLACK_ROOK 
+					&& !DataHandler.PieceArray[7].IsMoved)
+                {
+                    kingMask |= 144115188075855872;
+                }
+                if (DataHandler.PieceArray[3] == null
+                    && DataHandler.PieceArray[2] == null
+                    && DataHandler.PieceArray[1] == null 
+					&& DataHandler.PieceArray[0] != null 
+					&& DataHandler.PieceArray[0].Type == (int)DataHandler.PieceNames.BLACK_ROOK 
+					&& !DataHandler.PieceArray[0].IsMoved)
+                {
+                    kingMask |= 2305843009213693952;
+                }
+            }
+			else
+			{
+				if (DataHandler.PieceArray[61] == null 
+					&& DataHandler.PieceArray[62] == null
+					&& DataHandler.PieceArray[63] != null 
+					&& DataHandler.PieceArray[63].Type == (int)DataHandler.PieceNames.WHITE_ROOK 
+					&& !DataHandler.PieceArray[63].IsMoved)
+				{
+					kingMask |= 2;
+				}
+				if (DataHandler.PieceArray[59] == null
+                    && DataHandler.PieceArray[58] == null
+                    && DataHandler.PieceArray[57] == null 
+					&& DataHandler.PieceArray[56] != null 
+					&& DataHandler.PieceArray[56].Type == (int)DataHandler.PieceNames.WHITE_ROOK 
+					&& !DataHandler.PieceArray[56].IsMoved)
+				{
+					kingMask |= 32;
+				}
+			}
+
+        }
 		kingMask ^= selfBoard & kingMask;
 		return kingMask;
 	}

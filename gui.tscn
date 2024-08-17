@@ -319,7 +319,7 @@ script = ExtResource("5_gtam7")
 
 [node name="ChessBot" type="Node" parent="."]
 script = ExtResource("6_dhvux")
-maxDepth = 4
+maxDepth = 1
 
 [node name="Message" type="Label" parent="."]
 visible = false
