@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System;
 using System.Collections.Generic;
 
 public partial class GUI : Control
@@ -19,7 +20,7 @@ public partial class GUI : Control
 	Array<slot> GridArray = new Array<slot>();
 	Vector2 IconOffset = new Vector2(39, 39);
 
-	const string StartFen = "k7/r7/8/8/8/8/R7/K7 w KQkq - 0 1";
+	const string StartFen = "K7/7r/8/8/8/8/r7/k7 w KQkq - 0 1";
     // "8/8/k4r1R/8/8/8/8/8";
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -41,31 +42,51 @@ public partial class GUI : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if(GameStart && Bitboard.whitePieces[1] == 0)
-		{
-            Message.Text = "Black Won";
-            Message.Visible = true;
-            ClearBoardFilter();
-            ClearPieceArray();
-            SelectedPiece = null;
-			GameStart = false;
-        }
-		else if(GameStart && Bitboard.blackPieces[1] == 0)
-		{
-            Message.Text = "White Won";
-            Message.Visible = true;
-            ClearBoardFilter();
-            ClearPieceArray();
-            SelectedPiece = null;
-			GameStart = false;
-        }
-
 		if (Input.IsActionJustPressed("RightMouse") && SelectedPiece != null)
 		{
 			SelectedPiece = null;
 			ClearBoardFilter();
 		}
 	}
+
+	public void WinCheck(bool isBlack)
+	{
+		int counter = 0;
+
+        List<DataHandler.Move> moves = Bitboard.GenerateMoveSet(!isBlack);
+
+        foreach (DataHandler.Move move in moves)
+        {
+            Bitboard newBoard = new();
+            newBoard.SetBoard(Bitboard.whitePieces, Bitboard.blackPieces);
+            newBoard.MakeMove(move, !isBlack);
+            if (!DataHandler.IsKingUnderAttack(!isBlack, newBoard))
+            {
+				counter++;
+				break;
+            }
+        }
+
+		if(counter == 0)
+		{
+			if(DataHandler.IsKingUnderAttack(!isBlack, Bitboard))
+			{
+				GameOver((isBlack) ? "Black win!" : "White win!");
+				return;
+			}
+			GameOver("Stalemate");
+		}
+    }
+
+	public void GameOver(string message)
+	{
+        Message.Text = message;
+        Message.Visible = true;
+        //ClearBoardFilter();
+        //ClearPieceArray();
+        SelectedPiece = null;
+        GameStart = false;
+    }
 
 	public void CreateSlots()
 	{
@@ -95,7 +116,13 @@ public partial class GUI : Control
 			ClearBoardFilter();
 			SelectedPiece = null;
 
-			BotsTurn();
+			WinCheck(isPlayerBlack);
+
+			if (GameStart)
+			{
+				BotsTurn();
+				WinCheck(!isPlayerBlack);
+			}
 		}
 	}
 
