@@ -23,9 +23,9 @@ public partial class ChessBot : Node
 	{
 	}
 
-	public void initBot(Bitboard board, bool isBlack)
+	public void initBot(bool isBlack)
 	{
-		currentBoard = board;
+		currentBoard = DataHandler.board;
 		this.isBlack = isBlack;
 	}
 
@@ -43,16 +43,19 @@ public partial class ChessBot : Node
 			Bitboard newBoard = new();
 			newBoard.SetBoard(searchBoard.whitePieces, searchBoard.blackPieces);
 			newBoard.MakeMove(move, isBlackMove);
-			int evaluation = -SearchMoves(!isBlackMove, depth - 1, newBoard, -beta, -alpha);
-			if(depth == maxDepth && evaluation > alpha)
+			if (!DataHandler.IsKingUnderAttack(isBlackMove, newBoard))
 			{
-				currentMove.From = move.From;
-				currentMove.To = move.To;
-			}
-			alpha = Math.Max(evaluation, alpha);
-			if(evaluation >= beta)
-			{
-				return beta;
+				int evaluation = -SearchMoves(!isBlackMove, depth - 1, newBoard, -beta, -alpha);
+				if(depth == maxDepth && evaluation > alpha)
+				{
+					currentMove.From = move.From;
+					currentMove.To = move.To;
+				}
+				alpha = Math.Max(evaluation, alpha);
+				if(evaluation >= beta)
+				{
+					return beta;
+				}
 			}
 		}
 		return alpha;

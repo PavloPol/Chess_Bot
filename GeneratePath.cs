@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 public partial class GeneratePath : Node
 {
@@ -14,16 +15,12 @@ public partial class GeneratePath : Node
 	{
 	}
 
-	public bool IsKingUnderAttack(bool isBlack) ////////
-	{
-		return false;
-	}
-
 	public ulong RookPath(int rookPosition, ulong selfBoard, ulong enemyBoard, bool isBlack)
 	{
 		ulong legalMoves = 0;
-		//right
-		for(int i = rookPosition + 1; i <= 63 && i%8 != 0; i++)
+
+        //right
+        for (int i = rookPosition + 1; i <= 63 && i%8 != 0; i++)
 		{
 			if((enemyBoard & (1UL << i)) != 0)
 			{
@@ -81,7 +78,7 @@ public partial class GeneratePath : Node
 			}
 			legalMoves |= 1UL << i;
 		}
-		return legalMoves;
+        return legalMoves;
 	}
 
 	public ulong KnightPath(int knightPosition, ulong selfBoard, ulong enemyBoard, bool isBlack)

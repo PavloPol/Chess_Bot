@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "C:\\Univ\\MastersWork\\Program\\ChessAI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\generatepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:generatepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\chessbot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:chessbot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\bitboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:bitboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\generatepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:generatepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\datahandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:datahandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\chessbot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:chessbot.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\piece.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -38,33 +38,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 213,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "GUI.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\GUI.cs",
               "RelativeDocumentMoniker": "GUI.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\GUI.cs",
               "RelativeToolTip": "GUI.cs",
-              "ViewState": "AQIAAH8AAAAAAAAAAAAcwJQAAAAAAAAA",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAAABQAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-18T08:28:54.929Z",
               "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ChessBot.cs",
-              "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\ChessBot.cs",
-              "RelativeDocumentMoniker": "ChessBot.cs",
-              "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\ChessBot.cs",
-              "RelativeToolTip": "ChessBot.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAD0AAAAsAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-14T13:34:52.272Z",
               "EditorCaption": ""
             },
             {
@@ -77,13 +64,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "ChessBot.cs",
+              "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\ChessBot.cs",
+              "RelativeDocumentMoniker": "ChessBot.cs",
+              "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\ChessBot.cs",
+              "RelativeToolTip": "ChessBot.cs",
+              "ViewState": "AQIAABgAAAAAAAAAAAAowCwAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-14T13:34:52.272Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "GeneratePath.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\GeneratePath.cs",
               "RelativeDocumentMoniker": "GeneratePath.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\GeneratePath.cs",
               "RelativeToolTip": "GeneratePath.cs",
-              "ViewState": "AQIAAA0BAAAAAAAAAAAAwBIBAAADAAAA",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAxwBgAAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-25T10:18:04.536Z",
               "EditorCaption": ""
@@ -96,7 +96,7 @@
               "RelativeDocumentMoniker": "Piece.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Piece.cs",
               "RelativeToolTip": "Piece.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAjwBsAAAACAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABsAAAACAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-18T09:20:46.336Z",
               "EditorCaption": ""
@@ -111,31 +111,30 @@
               "RelativeToolTip": "slot.cs",
               "ViewState": "AQIAAAcAAAAAAAAAAAAswA0AAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-18T08:42:59.486Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-18T08:42:59.486Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "DataHandler.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\DataHandler.cs",
               "RelativeDocumentMoniker": "DataHandler.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\DataHandler.cs",
               "RelativeToolTip": "DataHandler.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAgwC4AAAAeAAAA",
+              "ViewState": "AQIAACMAAAAAAAAAAAAwwBsAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-09T08:27:24.296Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Bitboard.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Bitboard.cs",
               "RelativeDocumentMoniker": "Bitboard.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Bitboard.cs",
               "RelativeToolTip": "Bitboard.cs",
-              "ViewState": "AQIAALwAAAAAAAAAAAA6wNAAAAAdAAAA",
+              "ViewState": "AQIAACIBAAAAAAAAAAAqwDcBAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-24T08:55:18.016Z",
               "EditorCaption": ""

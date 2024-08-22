@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System.Collections.Generic;
 
 public partial class GUI : Control
 {
@@ -18,7 +19,7 @@ public partial class GUI : Control
 	Array<slot> GridArray = new Array<slot>();
 	Vector2 IconOffset = new Vector2(39, 39);
 
-	const string StartFen = "8/P7/3k4/8/8/3K4/7p/8 w KQkq - 0 1";
+	const string StartFen = "k7/r7/8/8/8/8/R7/K7 w KQkq - 0 1";
     // "8/8/k4r1R/8/8/8/8/8";
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -216,32 +217,35 @@ public partial class GUI : Control
 					selfBitBoard = enemyBitBoard;
 					enemyBitBoard = tmp;
 				}
+				ulong legalMoves = 1;
 				switch (piece.Type % 6)
 				{
 					case 0:
-						SetBoardFilter(GeneratePath.BishopPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack));
+						legalMoves = GeneratePath.BishopPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack);
 						break;
 					case 1:
-						SetBoardFilter(GeneratePath.KingPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack));
+						legalMoves = GeneratePath.KingPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack);
 						break;
 					case 2:
-						SetBoardFilter(GeneratePath.KnightPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack));
+						legalMoves = GeneratePath.KnightPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack);
 						break;
 					case 3:
-						SetBoardFilter(GeneratePath.PawnPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack));
+						legalMoves = GeneratePath.PawnPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack);
 						break;
 					case 4:
-						SetBoardFilter(GeneratePath.QueenPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack));
+						legalMoves = GeneratePath.QueenPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack);
 						break;
 					case 5:
-						SetBoardFilter(GeneratePath.RookPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack));
+						legalMoves = GeneratePath.RookPath(63 - piece.SlotID, selfBitBoard, enemyBitBoard, isBlack);
 						break;
 				}
-			}
+                legalMoves = DataHandler.CheckLegalMoves(legalMoves, 63 - piece.SlotID, isBlack);
+                SetBoardFilter(legalMoves);
+            }
 		}
 	}
 
-	public void SetBoardFilter(ulong bitmap)
+    public void SetBoardFilter(ulong bitmap)
 	{
 		for(int i = 0; i < 64; i++)
 		{
@@ -288,29 +292,33 @@ public partial class GUI : Control
 	{
 		isPlayerBlack = false;
 		PlayersTurn = true;
-		Message.Visible = false;
-		ClearBoardFilter();
-		ClearPieceArray();
-		SelectedPiece = null;
-		ParseFen(StartFen);
-		Bitboard.InitBitBoard(StartFen);
-		ChessBot.initBot(Bitboard, true);
-		GameStart = true;
+
+		StartGame();
+
+        ChessBot.initBot(true);
 	}
 
     public void OnPlayBlackButtonPressed()
     {
 		isPlayerBlack = true;
 		PlayersTurn = false;
+
+		StartGame();
+
+        ChessBot.initBot(false);
+		BotsTurn();
+    }
+
+	private void StartGame()
+	{
         Message.Visible = false;
         ClearBoardFilter();
         ClearPieceArray();
         SelectedPiece = null;
         ParseFen(StartFen);
         Bitboard.InitBitBoard(StartFen);
-        ChessBot.initBot(Bitboard, false);
+        DataHandler.board = Bitboard;
         GameStart = true;
-		BotsTurn();
     }
 
     public void ClearPieceArray()

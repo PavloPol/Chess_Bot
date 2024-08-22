@@ -25,6 +25,8 @@ public partial class DataHandler : Node
 
     public static Array<Piece> PieceArray = new Array<Piece>(new Piece[64]);
 
+	public static Bitboard board;
+
     public static Dictionary<char, int> FenDict = new Dictionary<char, int>()
     {
         {'b', 0},
@@ -68,10 +70,42 @@ public partial class DataHandler : Node
 		{'P', (int)PieceNames.WHITE_PAWN}
     };
 
+    public static bool IsKingUnderAttack(bool isBlack, Bitboard board)
+    {
+        ulong[] toList = isBlack ? board.blackPieces : board.whitePieces;
+        System.Collections.Generic.List<DataHandler.Move> moves = board.GenerateMoveSet(!isBlack);
+        foreach (DataHandler.Move move in moves)
+        {
+            ulong toBit = 1UL << move.To;
+            if ((toList[1] & ~(toBit)) == 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public static ulong CheckLegalMoves(ulong legalMoves, int position, bool isBlack)
+    {
+        for (int j = 0; j < 64; j++)
+        {
+            if ((legalMoves & (1UL << j)) != 0)
+            {
+                DataHandler.Move newMove = new(position, j);
+                Bitboard newBoard = new();
+                newBoard.SetBoard(DataHandler.board.whitePieces, DataHandler.board.blackPieces);
+                newBoard.MakeMove(newMove, isBlack);
+                if (DataHandler.IsKingUnderAttack(isBlack, newBoard))
+                {
+                    legalMoves ^= (1UL << j);
+                }
+            }
+        }
+        return legalMoves;
+    }
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 		PiecesIcons.Add(new Vector2I(2, 0));
 		PiecesIcons.Add(new Vector2I(0, 0));

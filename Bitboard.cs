@@ -318,7 +318,7 @@ public partial class Bitboard : Node
                 }
             }
         }
-
+        
         return moveSet;
     }
 
