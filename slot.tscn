@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dum805x78s8dt"]
 
-[ext_resource type="Script" path="res://slot.cs" id="1_awdh8"]
+[ext_resource type="Script" uid="uid://cx3s2h7klwwwd" path="res://slot.cs" id="1_awdh8"]
 
 [node name="Slot" type="ColorRect"]
 custom_minimum_size = Vector2(78, 78)

@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://dmv4opoi1t6hu"]
 
-[ext_resource type="Script" path="res://GUI.cs" id="1_77c5a"]
+[ext_resource type="Script" uid="uid://dbcyip3kuaikt" path="res://GUI.cs" id="1_77c5a"]
 [ext_resource type="PackedScene" uid="uid://dum805x78s8dt" path="res://slot.tscn" id="2_r88n1"]
-[ext_resource type="Script" path="res://Bitboard.cs" id="3_8fdpr"]
-[ext_resource type="Script" path="res://GeneratePath.cs" id="5_gtam7"]
-[ext_resource type="Script" path="res://ChessBot.cs" id="6_dhvux"]
+[ext_resource type="Script" uid="uid://cvwqkp2r3gbue" path="res://Bitboard.cs" id="3_8fdpr"]
+[ext_resource type="Script" uid="uid://bvuxaxt25vgja" path="res://GeneratePath.cs" id="5_gtam7"]
+[ext_resource type="Script" uid="uid://dmh7hnkrgv4ql" path="res://ChessBot.cs" id="6_dhvux"]
 
 [node name="GUI" type="Control"]
 layout_mode = 3
