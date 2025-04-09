@@ -11,7 +11,7 @@ public partial class GUI : Control
 	Bitboard Bitboard;
 	GeneratePath GeneratePath;
 	Piece SelectedPiece = null;
-	ChessBot ChessBot;
+	ChessBotNoAI ChessBot;
 	Label Message;
 	bool GameStart = false;
 	bool PlayersTurn = true;
@@ -20,7 +20,7 @@ public partial class GUI : Control
 	Array<slot> GridArray = new Array<slot>();
 	Vector2 IconOffset = new Vector2(39, 39);
 
-	const string StartFen = "K7/7r/8/8/8/8/r7/k7 w KQkq - 0 1";
+	const string StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     // "8/8/k4r1R/8/8/8/8/8";
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -31,7 +31,7 @@ public partial class GUI : Control
 		BoardGrid = GetNode<GridContainer>("ChessBoard/BoardGrid");
 		Bitboard = GetNode<Bitboard>("Bitboard");
 		GeneratePath = GetNode<GeneratePath>("GeneratePath");
-		ChessBot = GetNode<ChessBot>("ChessBot");
+		ChessBot = GetNode<ChessBotNoAI>("ChessBotNoAI");
 		Message = GetNode<Label>("Message");
 		CreateSlots();
 		PaintSlots();

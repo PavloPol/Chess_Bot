@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dum805x78s8dt" path="res://slot.tscn" id="2_r88n1"]
 [ext_resource type="Script" uid="uid://cvwqkp2r3gbue" path="res://Bitboard.cs" id="3_8fdpr"]
 [ext_resource type="Script" uid="uid://bvuxaxt25vgja" path="res://GeneratePath.cs" id="5_gtam7"]
-[ext_resource type="Script" uid="uid://dmh7hnkrgv4ql" path="res://ChessBot.cs" id="6_dhvux"]
+[ext_resource type="Script" uid="uid://bc501s371jxmc" path="res://ChessBotNoAI.cs" id="5_u77ya"]
 
 [node name="GUI" type="Control"]
 layout_mode = 3
@@ -317,9 +317,8 @@ script = ExtResource("3_8fdpr")
 [node name="GeneratePath" type="Node" parent="."]
 script = ExtResource("5_gtam7")
 
-[node name="ChessBot" type="Node" parent="."]
-script = ExtResource("6_dhvux")
-maxDepth = 1
+[node name="ChessBotNoAI" type="Node" parent="."]
+script = ExtResource("5_u77ya")
 
 [node name="Message" type="Label" parent="."]
 visible = false

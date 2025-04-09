@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-public partial class ChessBot : Node
+public partial class ChessBotNoAI : Node
 {
 	public int searchCounter = 0;
 	[Export]
-	public int maxDepth = 3;
+	public int maxDepth = 1;
 	public Bitboard currentBoard;
 	public DataHandler.Move currentMove = new(-1, -1);
 	public DataHandler DH = new();

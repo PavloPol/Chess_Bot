@@ -197,7 +197,8 @@ public partial class GeneratePath : Node
 		{
 			kingMask &= ~0xC0C0C0C0C0C0C0C0UL;
 		}
-		if (!DataHandler.PieceArray[63 - kingPosition].IsMoved)
+		//GD.Print(kingPosition);
+		if (!DataHandler.PieceArray[63-kingPosition].IsMoved)
 		{
 			if (isBlack)
 			{

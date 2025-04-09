@@ -4,7 +4,7 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace ChessBot.AI
+//namespace ChessBotNoAI.AI
 //{
 //    public static class ActivationFunctions
 //    {
