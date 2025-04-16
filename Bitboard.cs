@@ -70,6 +70,12 @@ public partial class Bitboard : Node
 				blackPieces[DataHandler.FenDict[Char.ToLower(i)]] |= 1UL;
             }
         }
+        for(int i = 0; i < 6; i++)
+        {
+            GD.Print(whitePieces[i]);
+        }
+        
+        GD.Print(blackPieces);
     }
 
 	private void LeftShift(int shiftAmount)

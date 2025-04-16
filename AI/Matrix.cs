@@ -1,169 +1,176 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Godot;
 
-//namespace ChessBotNoAI.AI
-//{
-//    public class Matrix
-//    {
-//        public double[,] Data { get; private set; }
-//        public int Rows { get; private set; }
-//        public int Columns { get; private set; }
+namespace ChessBot.AI
+{
+    public class Matrix
+    {
+        public double[,] Data { get; private set; }
+        public int Rows { get; private set; }
+        public int Columns { get; private set; }
 
-//        public Matrix(int rows, int columns)
-//        {
-//            Rows = rows;
-//            Columns = columns;
-//            Data = new double[rows, columns];
-//        }
+        public double this[int row, int col]
+        {
+            get => Data[row, col];
+            set => Data[row, col] = value;
+        }
 
-//        public void SetMatrix(Matrix matrix)
-//        {
-//            Rows = matrix.Rows;
-//            Columns = matrix.Columns; 
-//            Data = matrix.Data;
-//        }
+        public Matrix(int rows, int columns)
+        {
+            Rows = rows;
+            Columns = columns;
+            Data = new double[rows, columns];
+        }
 
-//        public void Randomize()
-//        {
-//            Random rand = new Random();
-//            for (int i = 0; i < Rows; i++)
-//            {
-//                for (int j = 0; j < Columns; j++)
-//                {
-//                    Data[i, j] = rand.NextDouble() * 2 - 1;
-//                }
-//            }
-//        }
+        public void SetMatrix(Matrix matrix)
+        {
+            Rows = matrix.Rows;
+            Columns = matrix.Columns;
+            Data = matrix.Data;
+        }
 
-//        public void Add(Matrix other)
-//        {
-//            if (Rows != other.Rows || Columns != other.Columns)
-//                throw new Exception("Matrix dimensions must match for addition!");
+        public void Randomize()
+        {
+            Random rand = new Random();
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    Data[i, j] = rand.NextDouble() * 2 - 1;
+                }
+            }
+        }
 
-//            for (int i = 0; i < Rows; i++)
-//            {
-//                for (int j = 0; j < Columns; j++)
-//                {
-//                    Data[i, j] += other.Data[i, j];
-//                }
-//            }
-//        }
+        public void Add(Matrix other)
+        {
+            if (Rows != other.Rows || Columns != other.Columns)
+                throw new Exception("Matrix dimensions must match for addition!");
 
-//        public static Matrix Substract(Matrix a, Matrix b)
-//        {
-//            if (a.Rows != b.Rows || a.Columns != b.Columns) throw new Exeption("Matrix dimensions must match for substract!");
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    Data[i, j] += other.Data[i, j];
+                }
+            }
+        }
 
-//            Matrix result = new Matrix(a.Rows, a.Columns);
+        public static Matrix Substract(Matrix a, Matrix b)
+        {
+            if (a.Rows != b.Rows || a.Columns != b.Columns) GD.Print("Matrix dimensions must match for substract!");
 
-//            for(int i = 0; i < a.Rows; i++)
-//            {
-//                for (int j = 0; j < a.Columns; j++)
-//                {
-//                    result.Data[i, j] = a.Data[i, j] - b.Data[i, j];
-//                }
-//            }
+            Matrix result = new Matrix(a.Rows, a.Columns);
 
-//            return result;
-//        }
+            for (int i = 0; i < a.Rows; i++)
+            {
+                for (int j = 0; j < a.Columns; j++)
+                {
+                    result.Data[i, j] = a.Data[i, j] - b.Data[i, j];
+                }
+            }
 
-//        public void Multiply(Matrix matrix)
-//        {
-//            if (Columns != matrix.Columns) throw new Exception("Incompatible matrix dimensions for multiplucations!");
+            return result;
+        }
 
-//            SetMatrix(Multiply(this, matrix));
-//        }
+        public void Multiply(Matrix matrix)
+        {
+            if (Columns != matrix.Columns) GD.Print("Incompatible matrix dimensions for multiplucations!");
 
-//        public static Matrix Multiply(Matrix a, Matrix b)
-//        {
-//            if (a.Columns != b.Columns) throw new Exception("Incompatible matrix dimensions for multiplications!");
+            SetMatrix(Multiply(this, matrix));
+        }
 
-//            Matrix result = new Matrix(a.Rows, b.Columns);
-//            for (int i = 0; i < a.Rows; i++)
-//            {
-//                for (int j = 0; j < b.Columns; j++)
-//                {
-//                    for (int k = 0; k < a.Columns; k++)
-//                    {
-//                        result.Data[i, j] += a.Data[i, k] * b.Data[k, j];
-//                    }
-//                }
-//            }
+        public static Matrix Multiply(Matrix a, Matrix b)
+        {
+            if (a.Columns != b.Columns) GD.Print("Incompatible matrix dimensions for multiplications!");
 
-//            return result;
-//        }
+            Matrix result = new Matrix(a.Rows, b.Columns);
+            for (int i = 0; i < a.Rows; i++)
+            {
+                for (int j = 0; j < b.Columns; j++)
+                {
+                    for (int k = 0; k < a.Columns; k++)
+                    {
+                        result.Data[i, j] += a.Data[i, k] * b.Data[k, j];
+                    }
+                }
+            }
 
-//        public void Multiply(double multiplier)
-//        {
-//            for(int i  = 0; i < Rows; i++)
-//            {
-//                for(int j = 0; j < Columns; j++)
-//                {
-//                    Data[i, j] *= multiplier;
-//                }
-//            }
-//        }
+            return result;
+        }
 
-//        public void ApplyFunction(Func<double, double> function)
-//        {
-//            for (int i = 0; i < Rows; i++)
-//            {
-//                for (int j = 0; j < Columns; j++)
-//                {
-//                    Data[i, j] = function(Data[i, j]);
-//                }
-//            }
-//        }
+        public void Multiply(double multiplier)
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    Data[i, j] *= multiplier;
+                }
+            }
+        }
 
-//        public static Matrix ApplyFunction(Matrix matrix, Func<double, double> function)
-//        {
-//            for(int i = 0; i < matrix.Rows; i++)
-//            {
-//                for(int j = 0; j < matrix.Columns; j++)
-//                {
-//                    matrix.Data[i, j] = function(matrix.Data[i, j]);
-//                }
-//            }
-//            return matrix;
-//        }
+        public void ApplyFunction(Func<double, double> function)
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    Data[i, j] = function(Data[i, j]);
+                }
+            }
+        }
 
-//        public static Matrix Transpose(Matrix matrix)
-//        {
-//            Matrix result = new Matrix(matrix.Columns, matrix.Rows);
+        public static Matrix ApplyFunction(Matrix matrix, Func<double, double> function)
+        {
+            for (int i = 0; i < matrix.Rows; i++)
+            {
+                for (int j = 0; j < matrix.Columns; j++)
+                {
+                    matrix.Data[i, j] = function(matrix.Data[i, j]);
+                }
+            }
+            return matrix;
+        }
 
-//            for(int j = 0; j < matrix.Columns; j++)
-//            {
-//                for(int i = 0; i < matrix.Rows; i++)
-//                {
-//                    result.Data[j, i] = matrix.Data[i, j];
-//                }
-//            }
+        public static Matrix Transpose(Matrix matrix)
+        {
+            Matrix result = new Matrix(matrix.Columns, matrix.Rows);
 
-//            return result;
-//        }
+            for (int j = 0; j < matrix.Columns; j++)
+            {
+                for (int i = 0; i < matrix.Rows; i++)
+                {
+                    result.Data[j, i] = matrix.Data[i, j];
+                }
+            }
 
-//        public static Matrix ConvertArrayToMatrix(double[] data)
-//        {
-//            Matrix result = new Matrix(data.Length, 1);
+            return result;
+        }
 
-//            for(int i =  0; i < data.Length; i++)
-//            {
-//                result.Data[i, 0] = data[i];
-//            }
+        public static Matrix ConvertArrayToMatrix(double[] data)
+        {
+            Matrix result = new Matrix(data.Length, 1);
 
-//            return result;
-//        }
+            for (int i = 0; i < data.Length; i++)
+            {
+                result.Data[i, 0] = data[i];
+            }
 
-//        public static double[] ConvertMatrixToArray(Matrix matrix)
-//        {
-//            double[] array = new double[matrix.Rows];
-//            for(int i = 0; i < matrix.Rows; i++)
-//            {
-//                array[i] = matrix.Data[i, 0];
-//            }
-//            return array;
-//        }
-//    }
-//}
+            return result;
+        }
+
+        public static double[] ConvertMatrixToArray(Matrix matrix)
+        {
+            double[] array = new double[matrix.Rows];
+            for (int i = 0; i < matrix.Rows; i++)
+            {
+                array[i] = matrix.Data[i, 0];
+            }
+            return array;
+        }
+    }
+}

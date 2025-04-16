@@ -1,103 +1,136 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Globalization;
 
-//namespace ChessBotNoAI.AI
-//{
-//    public class NeuralNetwork
-//    {
-//        private int inputNodes;
-//        private int hiddenNodes;
-//        private int outputNodes;
+namespace ChessBot.AI
+{
+    public class NeuralNetwork
+    {
+        private int inputNodes;
+        private int outputNodes;
+        private List<int> hiddenLayers;
 
-//        private Matrix weightsInputHidden;
-//        private Matrix weightsHiddenOutput;
+        private List<Matrix> weights;
+        private List<Matrix> biases;
 
-//        private Matrix biasHidden;
-//        private Matrix biasOutput;
+        private double learningRate = 0.1;
 
-//        private double learningRate = 0.1;
+        public NeuralNetwork(int inputNodes, List<int> hiddenLayers, int outputNodes)
+        {
+            this.inputNodes = inputNodes;
+            this.hiddenLayers = new List<int>(hiddenLayers);
+            this.outputNodes = outputNodes;
 
-//        public NeuralNetwork(int inputNodes, int hiddenNodes, int outputNodes)
-//        {
-//            this.inputNodes = inputNodes;
-//            this.hiddenNodes = hiddenNodes;
-//            this.outputNodes = outputNodes;
+            weights = new List<Matrix>();
+            biases = new List<Matrix>();
 
-//            weightsInputHidden = new Matrix(hiddenNodes, inputNodes);
-//            weightsHiddenOutput = new Matrix(outputNodes, hiddenNodes);
-//            biasHidden = new Matrix(hiddenNodes, 1);
-//            biasOutput = new Matrix(outputNodes, 1);
+            // Input to first hidden layer
+            weights.Add(new Matrix(hiddenLayers[0], inputNodes));
+            biases.Add(new Matrix(hiddenLayers[0], 1));
 
-//            weightsInputHidden.Randomize();
-//            weightsHiddenOutput.Randomize();
-//            biasHidden.Randomize();
-//            biasOutput.Randomize();
-//        }
-        
-//        //forward propagation
-//        public double[] Predict(double[] inputs)
-//        {
-//            Matrix inputMatrix = Matrix.ConvertArrayToMatrix(inputs);
+            // Hidden layers
+            for (int i = 1; i < hiddenLayers.Count; i++)
+            {
+                weights.Add(new Matrix(hiddenLayers[i], hiddenLayers[i - 1]));
+                biases.Add(new Matrix(hiddenLayers[i], 1));
+            }
 
-//            // Input to Hidden
-//            Matrix hidden = Matrix.Multiply(weightsInputHidden, inputMatrix);
-//            hidden.Add(biasHidden);
-//            hidden.ApplyFunction(ActivationFunctions.Sigmoid);
+            // Last hidden to output
+            weights.Add(new Matrix(outputNodes, hiddenLayers[^1]));
+            biases.Add(new Matrix(outputNodes, 1));
 
-//            // Hiiden to Output
-//            Matrix output = Matrix.Multiply(weightsHiddenOutput, hidden);
-//            output.Add(biasOutput);
-//            output.ApplyFunction(ActivationFunctions.Sigmoid);
+            // Randomize
+            foreach (var w in weights) w.Randomize();
+            foreach (var b in biases) b.Randomize();
+        }
 
-//            return Matrix.ConvertMatrixToArray(output);
-//        }
+        public double[] Predict(double[] inputArray)
+        {
+            Matrix output = Matrix.ConvertArrayToMatrix(inputArray);
 
-//        // Training woth backpropagation
-//        public void Train(double[] inputsArray, double[] targetArray)
-//        {
-//            Matrix inputs = Matrix.ConvertArrayToMatrix(inputsArray);
-//            Matrix targets = Matrix.ConvertArrayToMatrix(targetArray);
+            for (int i = 0; i < weights.Count; i++)
+            {
+                output = Matrix.Multiply(weights[i], output);
+                output.Add(biases[i]);
+                output.ApplyFunction(ActivationFunctions.Sigmoid);
+            }
 
-//            //Forward Propagation
-//            Matrix hidden = Matrix.Multiply(weightsInputHidden, inputs);
-//            hidden.Add(biasHidden);
-//            hidden.ApplyFunction(ActivationFunctions.Sigmoid);
+            return Matrix.ConvertMatrixToArray(output);
+        }
 
-//            Matrix outputs = Matrix.Multiply(weightsHiddenOutput, hidden);
-//            outputs.Add(biasOutput);
-//            outputs.ApplyFunction(ActivationFunctions.Sigmoid);
+        public void Train(double[] inputArray, double[] targetArray)
+        {
+            Matrix input = Matrix.ConvertArrayToMatrix(inputArray);
+            Matrix target = Matrix.ConvertArrayToMatrix(targetArray);
 
-//            //Calculate output error
-//            Matrix outputErrors = Matrix.Substract(targets, outputs);
+            List<Matrix> layerOutputs = new List<Matrix> { input };
 
-//            //Backpropagation for hidden to output weights
-//            Matrix outputGradients = Matrix.ApplyFunction(outputs, ActivationFunctions.SigmoidDerivative);
-//            outputGradients.Multiply(outputErrors);
-//            outputGradients.Multiply(learningRate);
+            // Forward pass
+            Matrix current = input;
+            for (int i = 0; i < weights.Count; i++)
+            {
+                current = Matrix.Multiply(weights[i], current);
+                current.Add(biases[i]);
+                current.ApplyFunction(ActivationFunctions.Sigmoid);
+                layerOutputs.Add(current);
+            }
 
-//            Matrix hiddenTransposed = Matrix.Transpose(hidden);
-//            Matrix weightsHioddenOutputDeltas = Matrix.Multiply(outputGradients, hiddenTransposed);
+            // Calculate error
+            Matrix output = layerOutputs[^1];
+            Matrix error = Matrix.Substract(target, output);
 
-//            weightsHiddenOutput.Add(weightsHioddenOutputDeltas);
-//            biasOutput.Add(outputGradients);
+            // Backward pass
+            for (int i = weights.Count - 1; i >= 0; i--)
+            {
+                Matrix gradient = Matrix.ApplyFunction(layerOutputs[i + 1], ActivationFunctions.SigmoidDerivative);
+                gradient.Multiply(error);
+                gradient.Multiply(learningRate);
 
-//            //Calculate hidden layer errors
-//            Matrix weightsHiddenOutputTransposed = Matrix.Transpose(weightsHiddenOutput);
-//            Matrix hiddenErrors = Matrix.Multiply(weightsHiddenOutputTransposed, outputErrors);
+                Matrix transposed = Matrix.Transpose(layerOutputs[i]);
+                Matrix delta = Matrix.Multiply(gradient, transposed);
 
-//            // Backpropagation for input to hiddden weights
-//            Matrix hiddenGradients = Matrix.ApplyFunction(hidden, ActivationFunctions.SigmoidDerivative);
-//            hiddenGradients.Multiply(hiddenErrors);
-//            hiddenGradients.Multiply(learningRate);
+                weights[i].Add(delta);
+                biases[i].Add(gradient);
 
-//            Matrix inputsTransposed = Matrix.Transpose(inputs);
-//            Matrix weightsInputHiddenDeltas = Matrix.Multiply(hiddenGradients, inputsTransposed);
+                if (i != 0)
+                {
+                    Matrix weightT = Matrix.Transpose(weights[i]);
+                    error = Matrix.Multiply(weightT, error);
+                }
+            }
+        }
 
-//            weightsInputHidden.Add(weightsInputHiddenDeltas);
-//            biasHidden.Add(hiddenGradients);
-//        }
-//    }
-//}
+        public void SaveWeights(string path)
+        {
+            using (StreamWriter writer = new StreamWriter(path))
+            {
+                writer.WriteLine($"InputNodes: {inputNodes}");
+                writer.WriteLine($"HiddenLayers: {string.Join(",", hiddenLayers)}");
+                writer.WriteLine($"OutputNodes: {outputNodes}");
+
+                for (int i = 0; i < weights.Count; i++)
+                {
+                    writer.WriteLine($"# Layer {i} Weights");
+                    WriteMatrix(writer, weights[i]);
+
+                    writer.WriteLine($"# Layer {i} Biases");
+                    WriteMatrix(writer, biases[i]);
+                }
+            }
+        }
+
+        private void WriteMatrix(StreamWriter writer, Matrix matrix)
+        {
+            for (int i = 0; i < matrix.Rows; i++)
+            {
+                for (int j = 0; j < matrix.Columns; j++)
+                {
+                    writer.Write(matrix[i, j].ToString("R", System.Globalization.CultureInfo.InvariantCulture));
+                    if (j < matrix.Columns - 1) writer.Write(",");
+                }
+                writer.WriteLine();
+            }
+        }
+    }
+}
