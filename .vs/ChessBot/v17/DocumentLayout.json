@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Univ\\MastersWork\\Program\\ChessAI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\ai\\activationfunctions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:ai\\activationfunctions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\train\\train.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:train\\train.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\bitboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:bitboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\ai\\neuralnetwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:ai\\neuralnetwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\ai\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:ai\\matrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\ai\\neuralnetwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:ai\\neuralnetwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\ai\\activationfunctions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:ai\\activationfunctions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -29,6 +29,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\generatepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:generatepath.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\bitboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|solutionrelative:bitboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{805DF6C4-FC36-4977-9D5F-6329441FB53F}|ChessBot.csproj|c:\\univ\\masterswork\\program\\chessai\\piece.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 213,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
@@ -60,7 +64,7 @@
               "RelativeDocumentMoniker": "GUI.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\GUI.cs",
               "RelativeToolTip": "GUI.cs",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAAAKkAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAAAQwCMAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-18T08:28:54.929Z",
               "IsPinned": true,
@@ -82,33 +86,45 @@
               "RelativeDocumentMoniker": "GeneratePath.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\GeneratePath.cs",
               "RelativeToolTip": "GeneratePath.cs",
-              "ViewState": "AgIAAKcAAAAAAAAAAAAqwMcAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMcAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-25T10:18:04.536Z",
+              "WhenOpened": "2024-05-25T10:18:04.536Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Train.cs",
+              "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Train\\Train.cs",
+              "RelativeDocumentMoniker": "Train\\Train.cs",
+              "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Train\\Train.cs",
+              "RelativeToolTip": "Train\\Train.cs",
+              "ViewState": "AgIAAF8AAAAAAAAAAADwv3MAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-16T09:34:21.317Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "NeuralNetwork.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\AI\\NeuralNetwork.cs",
               "RelativeDocumentMoniker": "AI\\NeuralNetwork.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\AI\\NeuralNetwork.cs",
               "RelativeToolTip": "AI\\NeuralNetwork.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAwwAkAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAgwBEAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-06T08:25:54.742Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "ActivationFunctions.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\AI\\ActivationFunctions.cs",
               "RelativeDocumentMoniker": "AI\\ActivationFunctions.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\AI\\ActivationFunctions.cs",
               "RelativeToolTip": "AI\\ActivationFunctions.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-06T08:24:09.332Z",
               "EditorCaption": ""
@@ -121,7 +137,7 @@
               "RelativeDocumentMoniker": "AI\\Matrix.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\AI\\Matrix.cs",
               "RelativeToolTip": "AI\\Matrix.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAcwIQAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAABQAAAAAAAAAAAAwwCoAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-06T08:10:56.823Z",
               "EditorCaption": ""
@@ -134,14 +150,13 @@
               "RelativeDocumentMoniker": "ChessBotNoAI.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\ChessBotNoAI.cs",
               "RelativeToolTip": "ChessBotNoAI.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-14T13:34:52.272Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-14T13:34:52.272Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Piece.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Piece.cs",
               "RelativeDocumentMoniker": "Piece.cs",
@@ -153,7 +168,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "slot.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\slot.cs",
               "RelativeDocumentMoniker": "slot.cs",
@@ -165,7 +180,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "DataHandler.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\DataHandler.cs",
               "RelativeDocumentMoniker": "DataHandler.cs",
@@ -177,16 +192,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "Bitboard.cs",
               "DocumentMoniker": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Bitboard.cs",
               "RelativeDocumentMoniker": "Bitboard.cs",
               "ToolTip": "C:\\Univ\\MastersWork\\Program\\ChessAI\\Bitboard.cs",
               "RelativeToolTip": "Bitboard.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAG4AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAADIAAAAAAAAAAAAmwEkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-24T08:55:18.016Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-24T08:55:18.016Z"
             }
           ]
         }

@@ -33,22 +33,20 @@ namespace ChessBot.AI
             Data = matrix.Data;
         }
 
-        public void Randomize()
+        public void Randomize(int fanIn = -1)
         {
             Random rand = new Random();
+            double scale = fanIn > 0 ? Math.Sqrt(1.0 / fanIn) : 1.0;
+
             for (int i = 0; i < Rows; i++)
-            {
                 for (int j = 0; j < Columns; j++)
-                {
-                    Data[i, j] = rand.NextDouble() * 2 - 1;
-                }
-            }
+                    Data[i, j] = rand.NextDouble() * 2 * scale - scale;
         }
 
         public void Add(Matrix other)
         {
             if (Rows != other.Rows || Columns != other.Columns)
-                throw new Exception("Matrix dimensions must match for addition!");
+                GD.PrintErr("Matrix dimensions must match for addition!");
 
             for (int i = 0; i < Rows; i++)
             {
@@ -61,7 +59,7 @@ namespace ChessBot.AI
 
         public static Matrix Substract(Matrix a, Matrix b)
         {
-            if (a.Rows != b.Rows || a.Columns != b.Columns) GD.Print("Matrix dimensions must match for substract!");
+            if (a.Rows != b.Rows || a.Columns != b.Columns) GD.PrintErr("Matrix dimensions must match for substract!");
 
             Matrix result = new Matrix(a.Rows, a.Columns);
 
@@ -78,14 +76,18 @@ namespace ChessBot.AI
 
         public void Multiply(Matrix matrix)
         {
-            if (Columns != matrix.Columns) GD.Print("Incompatible matrix dimensions for multiplucations!");
+            if (Columns != matrix.Rows) GD.PrintErr("Incompatible matrix dimensions for multiplucations!");
 
             SetMatrix(Multiply(this, matrix));
         }
 
         public static Matrix Multiply(Matrix a, Matrix b)
         {
-            if (a.Columns != b.Columns) GD.Print("Incompatible matrix dimensions for multiplications!");
+            if (a.Columns != b.Rows)
+            {
+                GD.PrintErr($"Matrix dimensions mismatch: A is {a.Rows}x{a.Columns}, B is {b.Rows}x{b.Columns}");
+                throw new Exception("Matrix A columns must match Matrix B rows!");
+            }
 
             Matrix result = new Matrix(a.Rows, b.Columns);
             for (int i = 0; i < a.Rows; i++)
@@ -98,6 +100,11 @@ namespace ChessBot.AI
                     }
                 }
             }
+
+            //for (int i = 0; i < result.Rows; i++)
+            //    for (int j = 0; j < result.Columns; j++)
+            //        if (double.IsNaN(result[i, j]) || double.IsInfinity(result[i, j]))
+            //            GD.PrintErr($"Matrix.Multiply -> NaN at ({i},{j}) = {result[i, j]}");
 
             return result;
         }
@@ -113,6 +120,36 @@ namespace ChessBot.AI
             }
         }
 
+        public static Matrix Multiply(Matrix a, double scalar)
+        {
+            var result = new Matrix(a.Rows, a.Columns);
+            for (int i = 0; i < a.Rows; i++)
+                for (int j = 0; j < a.Columns; j++)
+                    result[i, j] = a[i, j] * scalar;
+
+            //for (int i = 0; i < result.Rows; i++)
+            //    for (int j = 0; j < result.Columns; j++)
+            //        if (double.IsNaN(result[i, j]) || double.IsInfinity(result[i, j]))
+            //            GD.PrintErr($"Matrix.Multiply scalar -> NaN at ({i},{j}) = {result[i, j]}");
+
+            return result;
+        }
+
+        public void Hadamard(Matrix other)
+        {
+            if (Rows != other.Rows || Columns != other.Columns)
+                GD.PrintErr("Matrix dimensions must match for Hadamard product!");
+
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    Data[i, j] *= other.Data[i, j];
+                }
+            }
+        }
+
+
         public void ApplyFunction(Func<double, double> function)
         {
             for (int i = 0; i < Rows; i++)
@@ -126,14 +163,11 @@ namespace ChessBot.AI
 
         public static Matrix ApplyFunction(Matrix matrix, Func<double, double> function)
         {
+            Matrix result = new Matrix(matrix.Rows, matrix.Columns);
             for (int i = 0; i < matrix.Rows; i++)
-            {
                 for (int j = 0; j < matrix.Columns; j++)
-                {
-                    matrix.Data[i, j] = function(matrix.Data[i, j]);
-                }
-            }
-            return matrix;
+                    result.Data[i, j] = function(matrix.Data[i, j]);
+            return result;
         }
 
         public static Matrix Transpose(Matrix matrix)
@@ -172,5 +206,28 @@ namespace ChessBot.AI
             }
             return array;
         }
+
+        public static Matrix DivideElementWise(Matrix a, Matrix b)
+        {
+            if (a.Rows != b.Rows || a.Columns != b.Columns)
+                GD.PrintErr("Matrix dimensions must match for element-wise division!");
+
+            Matrix result = new Matrix(a.Rows, a.Columns);
+            for (int i = 0; i < a.Rows; i++)
+                for (int j = 0; j < a.Columns; j++)
+                    result[i, j] = a[i, j] / b[i, j];
+            return result;
+        }
+
+        public void Substract(Matrix other)
+        {
+            if (Rows != other.Rows || Columns != other.Columns)
+                GD.PrintErr("Matrix dimensions must match for subtraction!");
+
+            for (int i = 0; i < Rows; i++)
+                for (int j = 0; j < Columns; j++)
+                    Data[i, j] -= other[i, j];
+        }
+
     }
 }
