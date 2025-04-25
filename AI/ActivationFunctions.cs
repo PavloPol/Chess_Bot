@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Godot;
 
 namespace ChessBot.AI
 {
@@ -30,22 +31,24 @@ namespace ChessBot.AI
         public static double ReLUDerivative(double x) => x > 0 ? 1 : 0;
 
         public static double Linear(double x) => x;
+
         public static double LinearDerivative(double x) => 1;
 
         public static Matrix Softmax(Matrix input)
         {
-            double max = double.MinValue;
+            if (input.Columns != 1)
+                throw new ArgumentException("Softmax expects a column‐vector");
+            double max = Double.NegativeInfinity;
             for (int i = 0; i < input.Rows; i++)
                 max = Math.Max(max, input[i, 0]);
 
-            double sum = 0.0;
+            double sum = 0;
             for (int i = 0; i < input.Rows; i++)
                 sum += Math.Exp(input[i, 0] - max);
 
-            Matrix result = new Matrix(input.Rows, 1);
+            var result = new Matrix(input.Rows, 1);
             for (int i = 0; i < input.Rows; i++)
                 result[i, 0] = Math.Exp(input[i, 0] - max) / sum;
-
             return result;
         }
 
