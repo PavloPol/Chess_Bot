@@ -8,6 +8,14 @@ public partial class Bitboard : Node
 	public ulong[] whitePieces = { 0, 0, 0, 0, 0, 0 }; // bishop king knight pawn queen rook
 	public ulong[] blackPieces = { 0, 0, 0, 0, 0, 0 };
 
+    public bool WhiteKingMoved = false;
+    public bool BlackKingMoved = false;
+    public bool WhiteKingsideRookMoved = false;
+    public bool WhiteQueensideRookMoved = false;
+    public bool BlackKingsideRookMoved = false;
+    public bool BlackQueensideRookMoved = false;
+
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
@@ -42,6 +50,12 @@ public partial class Bitboard : Node
 	{
 		Array.Clear(whitePieces);
 		Array.Clear(blackPieces);
+        WhiteKingMoved = false;
+        BlackKingMoved = false;
+        WhiteKingsideRookMoved = false;
+        WhiteQueensideRookMoved = false;
+        BlackKingsideRookMoved = false;
+        BlackQueensideRookMoved = false;
     }
 
 	public void InitBitBoard(string fen)
@@ -70,12 +84,12 @@ public partial class Bitboard : Node
 				blackPieces[DataHandler.FenDict[Char.ToLower(i)]] |= 1UL;
             }
         }
-        for(int i = 0; i < 6; i++)
-        {
-            GD.Print(whitePieces[i]);
-        }
+        //for(int i = 0; i < 6; i++)
+        //{
+        //    GD.Print(whitePieces[i]);
+        //}
         
-        GD.Print(blackPieces);
+        //GD.Print(blackPieces);
     }
 
 	private void LeftShift(int shiftAmount)
@@ -135,6 +149,24 @@ public partial class Bitboard : Node
 			if ((fromList[i] & fromBit) != 0)
 			{
 				fromList[i] &= ~(fromBit);
+                if (i == 1) // king
+                {
+                    if (isBlackMove) BlackKingMoved = true;
+                    else WhiteKingMoved = true;
+                }
+                else if (i == 5) // rook
+                {
+                    if (isBlackMove)
+                    {
+                        if (move.From == 0) BlackQueensideRookMoved = true;
+                        else if (move.From == 7) BlackKingsideRookMoved = true;
+                    }
+                    else
+                    {
+                        if (move.From == 56) WhiteQueensideRookMoved = true;
+                        else if (move.From == 63) WhiteKingsideRookMoved = true;
+                    }
+                }
                 if (move.promote && IsPawn(i)) // Check for promotion
                 {
                     PromoteToQueen(fromList, toBit);

@@ -1,7 +1,8 @@
-using Godot;
+﻿using Godot;
 using Godot.Collections;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 public partial class GUI : Control
 {
@@ -11,13 +12,22 @@ public partial class GUI : Control
 	Bitboard Bitboard;
 	GeneratePath GeneratePath;
 	Piece SelectedPiece = null;
-	ChessBotNoAI ChessBot;
-	Label Message;
+	ChessBotNoAI WhiteChessBot;
+	ChessBotNoAI BlackChessBot;
+    TextEdit WhitePath;
+    TextEdit BlackPath;
+    Label Message;
 	bool GameStart = false;
 	bool PlayersTurn = true;
 	bool isPlayerBlack = false;
+    bool isWhiteTurn = true; // White starts
+    bool BotVsBotMode = false;
+    float botTimer = 0.0f;
+    float botMoveDelay = 0.01f; // 1 second between bot moves
+    private bool botGameRunning = false;
 
-	Array<slot> GridArray = new Array<slot>();
+
+    Array<slot> GridArray = new Array<slot>();
 	Vector2 IconOffset = new Vector2(39, 39);
 
 	const string StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -27,29 +37,49 @@ public partial class GUI : Control
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-		ChessBoard = GetNode<ColorRect>("ChessBoard");
+        WhitePath = GetNode<TextEdit>("WhitePath");
+        BlackPath = GetNode<TextEdit>("BlackPath");
+        ChessBoard = GetNode<ColorRect>("ChessBoard");
 		BoardGrid = GetNode<GridContainer>("ChessBoard/BoardGrid");
 		Bitboard = GetNode<Bitboard>("Bitboard");
 		GeneratePath = GetNode<GeneratePath>("GeneratePath");
-		ChessBot = GetNode<ChessBotNoAI>("ChessBotNoAI");
 		Message = GetNode<Label>("Message");
 		CreateSlots();
 		PaintSlots();
 
-		pieceScene = GD.Load<PackedScene>("res://piece.tscn");
+        pieceScene = GD.Load<PackedScene>("res://piece.tscn");
     }
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-		if (Input.IsActionJustPressed("RightMouse") && SelectedPiece != null)
-		{
-			SelectedPiece = null;
-			ClearBoardFilter();
-		}
-	}
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionJustPressed("RightMouse") && SelectedPiece != null)
+        {
+            SelectedPiece = null;
+            ClearBoardFilter();
+        }
+    }
 
-	public void WinCheck(bool isBlack)
+    public async void StartBotGameLoop()
+    {
+        if (botGameRunning) return;
+        botGameRunning = true;
+
+        while (GameStart && BotVsBotMode)
+        {
+            var bot = isWhiteTurn ? WhiteChessBot : BlackChessBot;
+            BotsTurn(bot);
+            WinCheck(!bot.isBlack);
+            isWhiteTurn = !isWhiteTurn;
+
+            await ToSignal(GetTree().CreateTimer(botMoveDelay), "timeout");
+        }
+
+        botGameRunning = false;
+    }
+
+
+    public void WinCheck(bool isBlack)
 	{
 		int counter = 0;
 
@@ -78,17 +108,16 @@ public partial class GUI : Control
 		}
     }
 
-	public void GameOver(string message)
-	{
+    public void GameOver(string message)
+    {
         Message.Text = message;
         Message.Visible = true;
-        //ClearBoardFilter();
-        //ClearPieceArray();
-        SelectedPiece = null;
         GameStart = false;
+        BotVsBotMode = false;
+        SelectedPiece = null;
     }
 
-	public void CreateSlots()
+    public void CreateSlots()
 	{
 		foreach(slot item in BoardGrid.GetChildren())
 		{
@@ -120,71 +149,154 @@ public partial class GUI : Control
 
 			if (GameStart)
 			{
-				BotsTurn();
+				BotsTurn(WhiteChessBot);
 				WinCheck(!isPlayerBlack);
 			}
 		}
 	}
 
-	public void BotsTurn()
-	{
-        var move = ChessBot.FindNextMove();
+    public void BotsTurn(ChessBotNoAI Bot)
+    {
+        int[] move = Bot.FindNextMove();
+
+        if (move[0] < 0 || move[0] > 63 || move[1] < 0 || move[1] > 63)
+        {
+            GD.PrintErr($"[BotsTurn] Bot returned invalid move: {move[0]} → {move[1]}");
+            return;
+        }
+
+        int from = 63 - move[0];
+        int to = 63 - move[1];
+
+        Piece piece = DataHandler.PieceArray[from];
+        if (piece == null)
+        {
+            GD.PrintErr($"[BotsTurn] No piece at {from} to move to {to}.");
+            return;
+        }
+
         PlayersTurn = !PlayersTurn;
-        MovePiece(DataHandler.PieceArray[63 - move[0]], 63 - move[1]);
+        System.Threading.Thread.Sleep(250);
+        MovePiece(piece, to);
     }
 
-	public void MovePiece(Piece piece, int location)
-	{
-		if (piece.Type == 1)
-		{
-			if (piece.SlotID - location == 2) // quenn side castle white
-			{
-				MovePiece(DataHandler.PieceArray[56], location + 1);
-			}
-			else if (piece.SlotID - location == -2) // king side castle white
-			{
-				MovePiece(DataHandler.PieceArray[63], location - 1);
-			}
-		}
-        if (piece.Type == 7)
+    public void MovePiece(Piece piece, int location)
+    {
+        if (piece == null)
         {
-            if (piece.SlotID - location == 2) // quenn side castle black
-            {
-                MovePiece(DataHandler.PieceArray[0], location + 1);
-            }
-            else if (piece.SlotID - location == -2) // king side castle black
-            {
-                MovePiece(DataHandler.PieceArray[7], location - 1);
-            }
+            GD.PrintErr($"[MovePiece] Tried to move a null piece to {location}.");
+            return;
         }
 
-        if (DataHandler.PieceArray[location] != null)
-		{
-			RemoveFromBitBoard(DataHandler.PieceArray[location]);
-			DataHandler.PieceArray[location].QueueFree();
-			DataHandler.PieceArray[location] = null;
-		}
-		
-		RemoveFromBitBoard(piece);
-		piece.GlobalPosition =  GridArray[location].GlobalPosition + IconOffset;
+        if (location < 0 || location > 63)
+        {
+            GD.PrintErr($"[MovePiece] Invalid target location: {location}");
+            return;
+        }
+
+        // Castling logic
+        if (piece.Type == 1 && (piece.SlotID - location == 2 || piece.SlotID - location == -2))
+        {
+            int rookFrom = (piece.SlotID - location == 2) ? 56 : 63;
+            int rookTo = (piece.SlotID - location == 2) ? location + 1 : location - 1;
+            Piece rook = DataHandler.PieceArray[rookFrom];
+            if (rook != null) MovePiece(rook, rookTo);
+        }
+        if (piece.Type == 7 && (piece.SlotID - location == 2 || piece.SlotID - location == -2))
+        {
+            int rookFrom = (piece.SlotID - location == 2) ? 0 : 7;
+            int rookTo = (piece.SlotID - location == 2) ? location + 1 : location - 1;
+            Piece rook = DataHandler.PieceArray[rookFrom];
+            if (rook != null) MovePiece(rook, rookTo);
+        }
+
+        Piece target = DataHandler.PieceArray[location];
+        if (target != null)
+        {
+            RemoveFromBitBoard(target);
+            target.QueueFree();
+            DataHandler.PieceArray[location] = null;
+        }
+
+        RemoveFromBitBoard(piece);
+        piece.GlobalPosition = GridArray[location].GlobalPosition + IconOffset;
         DataHandler.PieceArray[piece.SlotID] = null;
-		DataHandler.PieceArray[location] = piece;
-		piece.SlotID = location;
+        DataHandler.PieceArray[location] = piece;
+        piece.SlotID = location;
         piece.IsMoved = true;
 
-        if (piece.Type == 3 && location < 8) // white pawn
-        {
-            piece.SetType(4); // promote to queen
-        }
-        if (piece.Type == 9 && location > 55)
-        {
-            piece.SetType(10);
-        }
+        if (piece.Type == 3 && location < 8) piece.SetType(4); // Promote white pawn
+        if (piece.Type == 9 && location > 55) piece.SetType(10); // Promote black pawn
 
         Bitboard.AddPiece(63 - location, piece.Type);
-	}
+    }
 
-	public void RemoveFromBitBoard(Piece piece)
+    public async void RunBotVsBotGames(int gameCount = 10)
+    {
+        List<string> results = new();
+        for (int i = 1; i <= gameCount; i++)
+        {
+            GD.Print($"Starting game {i}...");
+            StartGame();
+            BotVsBotMode = true;
+            isPlayerBlack = false;
+            PlayersTurn = false;
+            isWhiteTurn = true;
+
+            WhiteChessBot.initBot(false);
+            BlackChessBot.initBot(true);
+
+            int moveCount = 0;
+            int noCaptureOrPawnMove = 0;
+            int maxMovesWithoutProgress = 50;
+
+            while (GameStart)
+            {
+                await ToSignal(GetTree().CreateTimer(botMoveDelay), "timeout");
+
+                var activeBot = isWhiteTurn ? WhiteChessBot : BlackChessBot;
+                int[] move = activeBot.FindNextMove();
+                if (move[0] == -1)
+                {
+                    string winner = isWhiteTurn ? "Black win!" : "White win!";
+                    GameOver(winner);
+                    results.Add($"Game {i}: {winner}");
+                    break;
+                }
+
+                var targetPiece = DataHandler.PieceArray[63 - move[1]];
+                var movingPiece = DataHandler.PieceArray[63 - move[0]];
+                bool capture = targetPiece != null;
+                bool isPawn = (movingPiece.Type == 3 || movingPiece.Type == 9);
+
+                if (!capture && !isPawn)
+                    noCaptureOrPawnMove++;
+                else
+                    noCaptureOrPawnMove = 0;
+
+                MovePiece(movingPiece, 63 - move[1]);
+                WinCheck(!activeBot.isBlack);
+
+                isWhiteTurn = !isWhiteTurn;
+                moveCount++;
+
+                if (noCaptureOrPawnMove >= maxMovesWithoutProgress)
+                {
+                    GameOver("Draw by 50-move rule");
+                    results.Add($"Game {i}: Draw");
+                    break;
+                }
+            }
+
+            if (Message.Text.Contains("Stalemate"))
+                results.Add($"Game {i}: Draw (Stalemate)");
+        }
+
+        GameLogger.WriteLog(results);
+        GD.Print("Games complete. Results saved.");
+    }
+
+    public void RemoveFromBitBoard(Piece piece)
 	{
 		Bitboard.RemovePiece(63 - piece.SlotID, piece.Type);
 	}
@@ -272,6 +384,11 @@ public partial class GUI : Control
 		}
 	}
 
+	public void OnRunBotGamesPressed()
+	{
+		RunBotVsBotGames();
+	}
+
     public void SetBoardFilter(ulong bitmap)
 	{
 		for(int i = 0; i < 64; i++)
@@ -315,14 +432,29 @@ public partial class GUI : Control
 
     }
 
-	public void OnPlayWhiteButtonPressed()
+    public void OnBotVsBotPressed()
+    {
+        isPlayerBlack = false;
+        PlayersTurn = false;
+        BotVsBotMode = true;
+        isWhiteTurn = true;
+
+        StartGame();
+
+        WhiteChessBot.initBot(false); // white
+        BlackChessBot.initBot(true);  // black
+
+        StartBotGameLoop(); // <-- Add this line
+    }
+
+    public void OnPlayWhiteButtonPressed()
 	{
 		isPlayerBlack = false;
 		PlayersTurn = true;
 
 		StartGame();
 
-        ChessBot.initBot(true);
+        WhiteChessBot.initBot(true);
 	}
 
     public void OnPlayBlackButtonPressed()
@@ -332,12 +464,13 @@ public partial class GUI : Control
 
 		StartGame();
 
-        ChessBot.initBot(false);
-		BotsTurn();
+        WhiteChessBot.initBot(false);
+		BotsTurn(WhiteChessBot);
     }
 
 	private void StartGame()
 	{
+        InitNNs();
         Message.Visible = false;
         ClearBoardFilter();
         ClearPieceArray();
@@ -348,6 +481,23 @@ public partial class GUI : Control
         GameStart = true;
     }
 
+    private void InitNNs()
+    {
+        string WhitePaths = WhitePath.Text;
+        string BlackPaths = BlackPath.Text;
+        if (WhitePaths.Substring(WhitePaths.Length - 6) != ".json")
+            WhitePaths = "Train/Model_128_256_64_32.json";
+        else if(!File.Exists(WhitePaths))
+            WhitePaths = "Train/Model_128_256_64_32.json";
+
+        if (BlackPaths.Substring(BlackPaths.Length - 6) != ".json")
+            BlackPaths = "Train/Model_128_128_64_64_32_16.json";
+        else if (!File.Exists(BlackPaths))
+            BlackPaths = "Train/Model_128_128_64_64_32_16.json";
+
+        WhiteChessBot = new ChessBotNoAI(WhitePaths);
+        BlackChessBot = new ChessBotNoAI(BlackPaths);
+    }
     public void ClearPieceArray()
 	{
 		for(int i = 0; i < 64; i++)

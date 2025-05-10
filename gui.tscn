@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dmv4opoi1t6hu"]
+[gd_scene load_steps=5 format=3 uid="uid://dmv4opoi1t6hu"]
 
 [ext_resource type="Script" uid="uid://dbcyip3kuaikt" path="res://GUI.cs" id="1_77c5a"]
 [ext_resource type="PackedScene" uid="uid://dum805x78s8dt" path="res://slot.tscn" id="2_r88n1"]
 [ext_resource type="Script" uid="uid://cvwqkp2r3gbue" path="res://Bitboard.cs" id="3_8fdpr"]
 [ext_resource type="Script" uid="uid://bvuxaxt25vgja" path="res://GeneratePath.cs" id="5_gtam7"]
-[ext_resource type="Script" uid="uid://bc501s371jxmc" path="res://ChessBotNoAI.cs" id="5_u77ya"]
 
 [node name="GUI" type="Control"]
 layout_mode = 3
@@ -14,6 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_77c5a")
+metadata/_edit_horizontal_guides_ = [-143.0]
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -317,9 +317,6 @@ script = ExtResource("3_8fdpr")
 [node name="GeneratePath" type="Node" parent="."]
 script = ExtResource("5_gtam7")
 
-[node name="ChessBotNoAI" type="Node" parent="."]
-script = ExtResource("5_u77ya")
-
 [node name="Message" type="Label" parent="."]
 visible = false
 layout_mode = 1
@@ -340,21 +337,77 @@ text = "gsdgnjksdngs"
 
 [node name="PlayWhite" type="Button" parent="."]
 layout_mode = 0
-offset_left = 170.0
-offset_top = 320.0
-offset_right = 315.0
-offset_bottom = 396.0
+offset_left = 266.0
+offset_top = 400.0
+offset_right = 423.0
+offset_bottom = 476.0
 theme_override_font_sizes/font_size = 20
 text = "Play White"
 
+[node name="RunBotGames" type="Button" parent="."]
+layout_mode = 0
+offset_left = 266.0
+offset_top = 492.0
+offset_right = 423.0
+offset_bottom = 568.0
+theme_override_font_sizes/font_size = 20
+text = "Run Bot Games"
+
 [node name="PlayBlack" type="Button" parent="."]
 layout_mode = 1
-offset_left = 170.0
-offset_top = 200.0
-offset_right = 315.0
-offset_bottom = 276.0
+offset_left = 96.0
+offset_top = 400.0
+offset_right = 253.0
+offset_bottom = 476.0
 theme_override_font_sizes/font_size = 20
 text = "Play Black"
 
+[node name="BotVsBot" type="Button" parent="."]
+layout_mode = 1
+offset_left = 96.0
+offset_top = 492.0
+offset_right = 253.0
+offset_bottom = 568.0
+theme_override_font_sizes/font_size = 20
+text = "Bot Vs Bot"
+
+[node name="WhitePath" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 144.0
+offset_right = 486.0
+offset_bottom = 187.0
+text = "C:\\Univ\\MastersWork\\Program\\ChessAI\\Train\\Model_128_256_64_32.json"
+placeholder_text = "White NN path"
+
+[node name="BlackPath" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 231.0
+offset_right = 486.0
+offset_bottom = 274.0
+text = "C:\\Univ\\MastersWork\\Program\\ChessAI\\Train\\Model_128_128_64_64_32_16.json"
+placeholder_text = "Black NN path"
+
+[node name="LabelBlack" type="Label" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 199.0
+offset_right = 133.0
+offset_bottom = 230.0
+theme_override_font_sizes/font_size = 22
+text = "Black NN"
+
+[node name="LabelWhite" type="Label" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 112.0
+offset_right = 138.0
+offset_bottom = 143.0
+theme_override_font_sizes/font_size = 22
+text = "White NN"
+
 [connection signal="pressed" from="PlayWhite" to="." method="OnPlayWhiteButtonPressed"]
+[connection signal="pressed" from="RunBotGames" to="." method="OnRunBotGamesPressed"]
 [connection signal="pressed" from="PlayBlack" to="." method="OnPlayBlackButtonPressed"]
+[connection signal="pressed" from="BotVsBot" to="." method="OnBotVsBotPressed"]

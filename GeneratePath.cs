@@ -197,52 +197,41 @@ public partial class GeneratePath : Node
 		{
 			kingMask &= ~0xC0C0C0C0C0C0C0C0UL;
 		}
-		//GD.Print(kingPosition);
-		if (!DataHandler.PieceArray[63-kingPosition].IsMoved)
-		{
-			if (isBlack)
-			{
-				if (DataHandler.PieceArray[5] == null 
-                    && DataHandler.PieceArray[6] == null 
-                    && DataHandler.PieceArray[7] != null 
-					&& DataHandler.PieceArray[7].Type == (int)DataHandler.PieceNames.BLACK_ROOK 
-					&& !DataHandler.PieceArray[7].IsMoved)
-                {
-                    kingMask |= 144115188075855872;
-                }
-                if (DataHandler.PieceArray[3] == null
-                    && DataHandler.PieceArray[2] == null
-                    && DataHandler.PieceArray[1] == null 
-					&& DataHandler.PieceArray[0] != null 
-					&& DataHandler.PieceArray[0].Type == (int)DataHandler.PieceNames.BLACK_ROOK 
-					&& !DataHandler.PieceArray[0].IsMoved)
-                {
-                    kingMask |= 2305843009213693952;
-                }
+        //GD.Print(kingPosition);
+        Bitboard board = DataHandler.board;
+        if (isBlack && !board.BlackKingMoved)
+        {
+            if (!board.BlackKingsideRookMoved &&
+                DataHandler.PieceArray[5] == null &&
+                DataHandler.PieceArray[6] == null)
+            {
+                kingMask |= 144115188075855872; // Kingside
             }
-			else
-			{
-				if (DataHandler.PieceArray[61] == null 
-					&& DataHandler.PieceArray[62] == null
-					&& DataHandler.PieceArray[63] != null 
-					&& DataHandler.PieceArray[63].Type == (int)DataHandler.PieceNames.WHITE_ROOK 
-					&& !DataHandler.PieceArray[63].IsMoved)
-				{
-					kingMask |= 2;
-				}
-				if (DataHandler.PieceArray[59] == null
-                    && DataHandler.PieceArray[58] == null
-                    && DataHandler.PieceArray[57] == null 
-					&& DataHandler.PieceArray[56] != null 
-					&& DataHandler.PieceArray[56].Type == (int)DataHandler.PieceNames.WHITE_ROOK 
-					&& !DataHandler.PieceArray[56].IsMoved)
-				{
-					kingMask |= 32;
-				}
-			}
-
+            if (!board.BlackQueensideRookMoved &&
+                DataHandler.PieceArray[3] == null &&
+                DataHandler.PieceArray[2] == null &&
+                DataHandler.PieceArray[1] == null)
+            {
+                kingMask |= 2305843009213693952; // Queenside
+            }
         }
-		kingMask ^= selfBoard & kingMask;
+        else if (!isBlack && !board.WhiteKingMoved)
+        {
+            if (!board.WhiteKingsideRookMoved &&
+                DataHandler.PieceArray[61] == null &&
+                DataHandler.PieceArray[62] == null)
+            {
+                kingMask |= 2; // Kingside
+            }
+            if (!board.WhiteQueensideRookMoved &&
+                DataHandler.PieceArray[59] == null &&
+                DataHandler.PieceArray[58] == null &&
+                DataHandler.PieceArray[57] == null)
+            {
+                kingMask |= 32; // Queenside
+            }
+        }
+        kingMask ^= selfBoard & kingMask;
 		return kingMask;
 	}
 

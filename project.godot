@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ChessAI"
-run/main_scene="uid://cottd7imtkqso"
+run/main_scene="uid://dq72x4hkxbn70"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 

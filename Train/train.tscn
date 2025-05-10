@@ -4,4 +4,4 @@
 
 [node name="Train" type="Node2D"]
 script = ExtResource("1_a40ri")
-SaveModelPath = "MatingData4Hidden_128_256_64_32"
+SaveModelPath = "NN_White_model"

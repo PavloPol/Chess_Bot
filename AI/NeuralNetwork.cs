@@ -151,7 +151,17 @@ namespace ChessBot.AI
                 var biasTile = biases[i].Repeat(1, batchSize);
                 current = current.Add(biasTile);
                 if (activations[i] == ActivationType.Softmax)
-                    current = ActivationFunctions.Softmax(current);
+                {
+                    // Softmax per column
+                    var softmaxed = new Matrix(current.Rows, current.Columns);
+                    for (int c = 0; c < current.Columns; c++)
+                    {
+                        var col = current.GetColumn(c);          // get [neurons x 1] vector
+                        var softmaxCol = ActivationFunctions.Softmax(col); // apply softmax
+                        softmaxed.SetColumn(c, softmaxCol);       // set back
+                    }
+                    current = softmaxed;
+                }
                 else
                     current = current.ApplyFunction(GetActivation(activations[i]));
                 outputs.Add(current);
@@ -198,7 +208,6 @@ namespace ChessBot.AI
                     error = Matrix.Multiply(Matrix.Transpose(weights[i]), grad);
             }
         }
-
 
         private Func<double, double> GetActivation(ActivationType type) => type switch
         {

@@ -259,5 +259,16 @@ namespace ChessBot.AI
             for (int j = 0; j < Columns; j++)
                 Data[rowIndex, j] = rowVector.Data[0, j];
         }
+
+        public Matrix GetColumn(int colIndex)
+        {
+            if (colIndex < 0 || colIndex >= Columns)
+                GD.PrintErr($"Invalid column index: {colIndex}");
+
+            var result = new Matrix(Rows, 1);
+            for (int i = 0; i < Rows; i++)
+                result.Data[i, 0] = this.Data[i, colIndex];
+            return result;
+        }
     }
 }
