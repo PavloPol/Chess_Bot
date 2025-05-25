@@ -1,4 +1,4 @@
-using Godot;
+﻿using Godot;
 using Godot.Collections;
 
 public partial class DataHandler : Node
@@ -84,6 +84,22 @@ public partial class DataHandler : Node
         }
         return false;
     }
+
+    public static bool IsSquareUnderAttack(int squareIndex, bool byBlack, Bitboard board)
+    {
+        // Генеруємо всі ходи атакуючої сторони
+        System.Collections.Generic.List<DataHandler.Move> enemyMoves = board.GenerateMoveSet(byBlack);
+
+        // Перевіряємо, чи якийсь із ходів спрямований на вказану клітинку
+        foreach (var move in enemyMoves)
+        {
+            if (move.To == squareIndex)
+                return true;
+        }
+
+        return false;
+    }
+
 
     public static ulong CheckLegalMoves(ulong legalMoves, int position, bool isBlack)
     {

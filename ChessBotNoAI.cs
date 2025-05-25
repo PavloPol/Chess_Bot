@@ -28,70 +28,78 @@ public partial class ChessBotNoAI
 
     public int[] FindNextMove()
     {
-        Random rnd = new();
-        List<DataHandler.Move> bestMoves = new();
-        searchCounter = 0;
-        List<DataHandler.Move> myMoves = currentBoard.GenerateMoveSet(isBlack);
+        var rnd = new Random();
+        var moves = currentBoard.GenerateMoveSet(isBlack);
+        double bestScore = double.NegativeInfinity;
+        DataHandler.Move bestMove = new(-1, -1);
 
-        double bestEval = double.PositiveInfinity;
-
-        foreach (var myMove in myMoves)
+        foreach (var myMove in moves)
         {
-            Bitboard afterMyMove = new();
-            afterMyMove.SetBoard(currentBoard.whitePieces, currentBoard.blackPieces);
-            afterMyMove.MakeMove(myMove, isBlack);
-
-            if (DataHandler.IsKingUnderAttack(isBlack, afterMyMove))
+            // 1) Клон дошки та виконання ходу бота
+            var boardAfterBot = new Bitboard();
+            boardAfterBot.SetBoard(currentBoard.whitePieces, currentBoard.blackPieces);
+            boardAfterBot.MakeMove(myMove, isBlack);
+            if (DataHandler.IsKingUnderAttack(isBlack, boardAfterBot))
                 continue;
 
-            double[] mating;
+            double score = 0;
+
+            // а) виграш бота за захоплення
+            int capByBot = GetPieceValueAt(currentBoard, myMove.To);
+            score += capByBot * 0.2;
+
+            // 2) відповіді опонента: шукаємо найсильніше взяття
+            var oppMoves = boardAfterBot.GenerateMoveSet(!isBlack);
+            int maxCapByOpp = 0;
+            foreach (var opp in oppMoves)
+            {
+                // якщо опонент бере нашу фігуру на opp.To
+                int cap = GetPieceValueAt(boardAfterBot, opp.To);
+                if (cap > maxCapByOpp)
+                    maxCapByOpp = cap;
+            }
+            score -= maxCapByOpp * 0.2;
+
+            // 3) оцінка позиції ШІ після ходу
             double eval;
             if (!isBlack)
             {
-                // Білий бот: перевертаємо позицію, щоб мережа бачила чорного як білого
-                Bitboard flipped = FlipBoardPerspective(afterMyMove);
+                var flipped = FlipBoardPerspective(boardAfterBot);
                 eval = EvaluateWithNN(flipped);
-                mating = EvaluateWithMNN(flipped);
-                if (mating[2] == 1)
-                    eval += 1;
-                if (mating[0] == 1)
-                    eval -= 1;
             }
             else
             {
-                // Чорний бот: мережа і так бачить супротивника — білих
-                eval = EvaluateWithNN(afterMyMove);
-                mating = EvaluateWithMNN(afterMyMove);
-                if (mating[2] == 1)
-                    eval += 1;
-                if (mating[0] == 1)
-                    eval -= 1;
+                eval = EvaluateWithNN(boardAfterBot);
             }
+            score += -1 * eval;
 
-            if (eval < bestEval)
+            // вибір найкращого
+            if (score > bestScore)
             {
-                bestEval = eval;
-                bestMoves.Clear();
-                bestMoves.Add(myMove);
-            }
-            else if (Math.Abs(eval - bestEval) < 1e-6)
-            {
-                bestMoves.Add(myMove);
+                bestScore = score;
+                bestMove = myMove;
             }
         }
 
-        if (bestMoves.Count > 0)
-        {
-            currentMove = bestMoves[rnd.Next(bestMoves.Count)];
-            GD.Print($"[Bot] Selected move: {currentMove.From} → {currentMove.To} (Eval = {bestEval:0.000})");
-        }
-        else
-        {
-            currentMove = new DataHandler.Move(-1, -1);
-            GD.Print("[Bot] No valid move found.");
-        }
+        currentMove = bestMove;
+        GD.Print($"[Bot] Selected move: {currentMove.From} → {currentMove.To} (Score = {bestScore:0.00})");
+        return new[] { currentMove.From, currentMove.To };
+    }
 
-        return new int[] { currentMove.From, currentMove.To };
+    // Приклад GetPieceValueAt незалежно від кольору
+    private int GetPieceValueAt(Bitboard board, int sq)
+    {
+        ulong mask = 1UL << sq;
+        for (int i = 0; i < 6; i++)
+            if ((board.whitePieces[i] & mask) != 0 || (board.blackPieces[i] & mask) != 0)
+                return DataHandler.Instance.pieceValues[i];
+        return 0;
+    }
+
+
+    private bool IsOpponentKingInCheck(Bitboard board, bool isBlackMove)
+    {
+        return DataHandler.IsKingUnderAttack(!isBlackMove, board);
     }
 
 
@@ -131,6 +139,11 @@ public partial class ChessBotNoAI
         return output; // Assuming 1 output neuron for evaluation
     }
 
+    private bool IsSquareUnderAttack(Bitboard board, int squareIndex, bool byBlack)
+    {
+        return DataHandler.IsSquareUnderAttack(squareIndex, byBlack, board);
+    }
+
     private double[] BitboardTo64Array(Bitboard board)
     {
         double[] input = new double[64];
@@ -147,6 +160,26 @@ public partial class ChessBotNoAI
         }
         return input;
     }
+
+    private int GetPieceValueAt(Bitboard board, int squareIndex, bool isBlack)
+    {
+        ulong mask = 1UL << squareIndex;
+        for (int i = 0; i < 6; i++)
+        {
+            if (isBlack)
+            {
+                if ((board.blackPieces[i] & mask) != 0)
+                    return DataHandler.Instance.pieceValues[i];
+            }
+            else
+            {
+                if ((board.whitePieces[i] & mask) != 0)
+                    return DataHandler.Instance.pieceValues[i];
+            }
+        }
+        return 0;
+    }
+
 
     private int PieceIndexToValue(int index)
     {

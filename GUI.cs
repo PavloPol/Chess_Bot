@@ -202,6 +202,7 @@ public partial class GUI : Control
             Piece rook = DataHandler.PieceArray[rookFrom];
             if (rook != null) MovePiece(rook, rookTo);
         }
+
         if (piece.Type == 7 && (piece.SlotID - location == 2 || piece.SlotID - location == -2))
         {
             int rookFrom = (piece.SlotID - location == 2) ? 0 : 7;
@@ -223,7 +224,37 @@ public partial class GUI : Control
         DataHandler.PieceArray[piece.SlotID] = null;
         DataHandler.PieceArray[location] = piece;
         piece.SlotID = location;
-        piece.IsMoved = true;
+        if(piece.Type == 1)
+        {
+            DataHandler.board.WhiteKingMoved = true;
+        }
+        if(piece.Type == 5)
+        {
+            if(piece.SlotID == 63)
+            {
+                DataHandler.board.WhiteKingsideRookMoved = true;
+            }
+            if (piece.SlotID == 56)
+            {
+                DataHandler.board.WhiteQueensideRookMoved = true;
+            }
+        }
+        if (piece.Type == 11)
+        {
+            if (piece.SlotID == 7)
+            {
+                DataHandler.board.BlackKingsideRookMoved = true;
+            }
+            if (piece.SlotID == 0)
+            {
+                DataHandler.board.BlackQueensideRookMoved = true;
+            }
+        }
+        if (piece.Type == 7)
+        {
+            DataHandler.board.BlackKingMoved = true;
+        }
+
 
         if (piece.Type == 3 && location < 8) piece.SetType(4); // Promote white pawn
         if (piece.Type == 9 && location > 55) piece.SetType(10); // Promote black pawn
