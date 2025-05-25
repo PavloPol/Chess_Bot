@@ -2,10 +2,10 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 public partial class ChessBotNoAI
 {
-    public int searchCounter = 0;
     public Bitboard currentBoard;
     public DataHandler.Move currentMove = new(-1, -1);
     public DataHandler DH = new();
@@ -13,6 +13,14 @@ public partial class ChessBotNoAI
 
     private NeuralNetwork nn;
     private NeuralNetwork mnn;
+
+    private int halfmoveCount = 0;
+    private const int MateSearchMoveThreshold = 25;
+    private const int OpponentPieceThreshold = 5;
+    private const double MateProbabilityThreshold = 0.8;
+    private const int IndexMateForWhite = 0;
+    private const int IndexNoMate = 1;
+    private const int IndexMateForBlack = 2;
 
     public ChessBotNoAI(string Path)
     {
@@ -24,18 +32,53 @@ public partial class ChessBotNoAI
     {
         currentBoard = DataHandler.board;
         this.isBlack = isBlack;
+        halfmoveCount = 0;
     }
 
     public int[] FindNextMove()
     {
-        var rnd = new Random();
+        halfmoveCount++;
+
+        if (ShouldSearchForMate())
+        {
+            var mateMoves = currentBoard.GenerateMoveSet(isBlack);
+            foreach (var move in mateMoves)
+            {
+                // Клонувати дошку і зробити хід
+                var boardAfter = new Bitboard();
+                boardAfter.SetBoard(currentBoard.whitePieces, currentBoard.blackPieces);
+                boardAfter.MakeMove(move, isBlack);
+
+                // Перевірка: чи ставить шах
+                if (!DataHandler.IsKingUnderAttack(!isBlack, boardAfter))
+                    continue;
+
+                // Миттєвий мат у 1 хід: жодних ходів у опонента після шаху
+                var oppMoves = boardAfter.GenerateMoveSet(!isBlack);
+                if (oppMoves.Count == 0)
+                {
+                    currentMove = move;
+                    return new[] { currentMove.From, currentMove.To };
+                }
+
+                // Інакше – оцінка ймовірності мату нейронною мережею
+                double[] cls = EvaluateWithMNN(boardAfter);
+                int idx = isBlack ? IndexMateForBlack : IndexMateForWhite;
+                double mateProb = cls[idx];
+                if (mateProb > MateProbabilityThreshold)
+                {
+                    currentMove = move;
+                    return new[] { currentMove.From, currentMove.To };
+                }
+            }
+        }
+
         var moves = currentBoard.GenerateMoveSet(isBlack);
         double bestScore = double.NegativeInfinity;
         DataHandler.Move bestMove = new(-1, -1);
 
         foreach (var myMove in moves)
         {
-            // 1) Клон дошки та виконання ходу бота
             var boardAfterBot = new Bitboard();
             boardAfterBot.SetBoard(currentBoard.whitePieces, currentBoard.blackPieces);
             boardAfterBot.MakeMove(myMove, isBlack);
@@ -44,23 +87,19 @@ public partial class ChessBotNoAI
 
             double score = 0;
 
-            // а) виграш бота за захоплення
             int capByBot = GetPieceValueAt(currentBoard, myMove.To);
             score += capByBot * 0.2;
 
-            // 2) відповіді опонента: шукаємо найсильніше взяття
             var oppMoves = boardAfterBot.GenerateMoveSet(!isBlack);
             int maxCapByOpp = 0;
             foreach (var opp in oppMoves)
             {
-                // якщо опонент бере нашу фігуру на opp.To
                 int cap = GetPieceValueAt(boardAfterBot, opp.To);
                 if (cap > maxCapByOpp)
                     maxCapByOpp = cap;
             }
             score -= maxCapByOpp * 0.2;
 
-            // 3) оцінка позиції ШІ після ходу
             double eval;
             if (!isBlack)
             {
@@ -73,7 +112,6 @@ public partial class ChessBotNoAI
             }
             score += -1 * eval;
 
-            // вибір найкращого
             if (score > bestScore)
             {
                 bestScore = score;
@@ -86,7 +124,20 @@ public partial class ChessBotNoAI
         return new[] { currentMove.From, currentMove.To };
     }
 
-    // Приклад GetPieceValueAt незалежно від кольору
+    private bool ShouldSearchForMate()
+    {
+        return halfmoveCount >= MateSearchMoveThreshold || CountOpponentPieces(currentBoard, isBlack) <= OpponentPieceThreshold;
+    }
+
+    private int CountOpponentPieces(Bitboard board, bool botIsBlack)
+    {
+        ulong[] opp = botIsBlack ? board.whitePieces : board.blackPieces;
+        int count = 0;
+        foreach (ulong bits in opp)
+            count += BitOperations.PopCount(bits);
+        return count;
+    }
+
     private int GetPieceValueAt(Bitboard board, int sq)
     {
         ulong mask = 1UL << sq;
@@ -95,13 +146,6 @@ public partial class ChessBotNoAI
                 return DataHandler.Instance.pieceValues[i];
         return 0;
     }
-
-
-    private bool IsOpponentKingInCheck(Bitboard board, bool isBlackMove)
-    {
-        return DataHandler.IsKingUnderAttack(!isBlackMove, board);
-    }
-
 
     private Bitboard FlipBoardPerspective(Bitboard board)
     {
@@ -139,11 +183,6 @@ public partial class ChessBotNoAI
         return output; // Assuming 1 output neuron for evaluation
     }
 
-    private bool IsSquareUnderAttack(Bitboard board, int squareIndex, bool byBlack)
-    {
-        return DataHandler.IsSquareUnderAttack(squareIndex, byBlack, board);
-    }
-
     private double[] BitboardTo64Array(Bitboard board)
     {
         double[] input = new double[64];
@@ -160,26 +199,6 @@ public partial class ChessBotNoAI
         }
         return input;
     }
-
-    private int GetPieceValueAt(Bitboard board, int squareIndex, bool isBlack)
-    {
-        ulong mask = 1UL << squareIndex;
-        for (int i = 0; i < 6; i++)
-        {
-            if (isBlack)
-            {
-                if ((board.blackPieces[i] & mask) != 0)
-                    return DataHandler.Instance.pieceValues[i];
-            }
-            else
-            {
-                if ((board.whitePieces[i] & mask) != 0)
-                    return DataHandler.Instance.pieceValues[i];
-            }
-        }
-        return 0;
-    }
-
 
     private int PieceIndexToValue(int index)
     {

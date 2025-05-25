@@ -22,8 +22,7 @@ public partial class GUI : Control
 	bool isPlayerBlack = false;
     bool isWhiteTurn = true; // White starts
     bool BotVsBotMode = false;
-    float botTimer = 0.0f;
-    float botMoveDelay = 0.01f; // 1 second between bot moves
+    float botMoveDelay = 0.5f;
     private bool botGameRunning = false;
 
 
